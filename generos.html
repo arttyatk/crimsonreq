@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nakama List - Gêneros</title>
+    <link rel="stylesheet" href="tabelage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<style>
+    .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    overflow: hidden; /* Garante que a imagem não saia do círculo */
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preencha o círculo sem distorcer */
+    border-radius: 50%; /* Mantém o formato circular da imagem */
+}
+
+/* Outras regras de user-profile, user-info, etc. que você já tem */
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-lighter);
+    margin-bottom: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-name:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.user-email {
+    font-size: 12px;
+    color: var(--text-gray);
+    opacity: 0.8;
+}
+</style>
+<body>
+
+    <aside class="layout-sidebar">
+        <nav>
+            <div class="layout-favicon"></div>
+            
+            <h2>Navegação</h2>
+            <ul>
+                <li><a href="inicial.html"><i class="fas fa-home"></i> Início</a></li>
+            </ul>
+            
+            <h2>Animes</h2>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-list"></i> Todos os Animes</a></li>
+            </ul>
+    
+            <h2>Classificações</h2>
+            <ul>
+                <li><a href="nota.html"><i class="fas fa-star"></i> Por Nota</a></li>
+                <li><a href="popularidade.html"><i class="fas fa-chart-line"></i> Por Popularidade</a></li>
+                <li><a href="generos.html"><i class="fas fa-sort-amount-desc"></i> Por Gênero</a></li>
+            </ul>
+
+            <h2>Certificado</h2>
+            <ul>
+                <li><a href="epdf.html"><i class="fas fa-star"></i> Gerar certificado </a></li>
+            </ul>
+
+            <h2>Informações gerais</h2>
+            <ul>
+                <li><a href="dashbor.html"><i class="fas fa-star"></i> Dashboard</a></li>
+            </ul>
+    
+            <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">
+                    V 
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Visitante</div>
+                    <div class="user-email" id="userEmail">Faça login</div>
+                </div>
+            </div>
+
+            <button type="button" class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+            </div>
+        </nav>
+    </aside>
+
+        <div class="layout-content">
+
+        <div class="anime-table-container">
+            <div class="table-header">
+                <h2 class="table-title">Lista de Animes</h2>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input class="search-input" placeholder="Pesquisar anime..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <form id="filterForm">
+                    <label>
+                        <input type="checkbox" value="Ação" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Ação
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Aventura" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Aventura
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Comédia" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Comédia
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Drama" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Drama
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Romance" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Romance
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Mecha" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Mecha
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Slice of Life" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Slice of Life
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Escolar" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Escolar
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Terror" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Terror
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Isekai" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Isekai
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Sobrenatural" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Sobrenatural
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Fantasia" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Fantasia
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Sci-fi" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Sci-fi
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Mistério" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Mistério
+                    </label>
+                    <label>
+                        <input type="checkbox" value="Suspense" class="genre-checkbox">
+                        <span class="checkmark"></span>
+                        Suspense
+                    </label>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="anime-table" id="animeTable">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-image"></i> Capa</th>
+                            <th><i class="fas fa-heading"></i> Título</th>
+                            <th><i class="fas fa-star"></i> Nota</th>
+                            <th><i class="fas fa-star"></i> Popularidade</th>
+                            <th><i class="fas fa-calendar-alt"></i> Lançamento</th>
+                            <th><i class="fas fa-tags"></i> Gêneros</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="animeTableBody">
+                    </tbody>
+                </table>
+            </div>
+                
+            <button id="mobileMenuToggle" class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="java.js"></script> </body>
+</html>

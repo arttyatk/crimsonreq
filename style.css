@@ -1,0 +1,941 @@
+:root {
+    --primary: #ff4d94;
+    --primary-dark: #e6399b;
+    --bg-dark: #121212;
+    --bg-darker: #0a0a0a;
+    --text-light: #e0e0e0;
+    --text-lighter: #ffffff;
+    --text-gray: #b0b0b0;
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+  }
+  
+  .layout-sidebar {
+    width: 300px;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-light);
+    padding: 30px 25px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  
+  .layout-content {
+    margin-left: 300px;
+    flex: 1;
+    background-color: var(--bg-dark);
+    overflow-x: hidden;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 20px;
+  }
+  
+  .layout-favicon {
+    width: 140px;
+    height: 140px;
+    background-image: url('logosemfundo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto 40px;
+    filter: drop-shadow(0 0 15px rgba(255, 77, 148, 0.6));
+    transition: var(--transition);
+  }
+  
+  .layout-sidebar nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .layout-sidebar nav h2 {
+    margin: 20px 0 15px;
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 8px;
+    opacity: 0.8;
+  }
+  
+  .layout-sidebar nav h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+  }
+  
+  .layout-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+  
+  .layout-sidebar nav ul li {
+    margin: 8px 0;
+    transition: var(--transition);
+  }
+  
+  .layout-sidebar nav ul li a {
+    color: var(--text-gray);
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .layout-sidebar nav ul li a:hover {
+    color: var(--text-lighter);
+    background-color: rgba(255, 77, 148, 0.15);
+    transform: translateX(5px);
+  }
+  
+  .layout-sidebar nav ul li a i {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 14px;
+  }
+  
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    overflow: hidden; /* Garante que a imagem não saia do círculo */
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preencha o círculo sem distorcer */
+    border-radius: 50%; /* Mantém o formato circular da imagem */
+}
+
+/* Outras regras de user-profile, user-info, etc. que você já tem */
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-lighter);
+    margin-bottom: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-name:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.user-email {
+    font-size: 12px;
+    color: var(--text-gray);
+    opacity: 0.8;
+}
+  
+  .logout-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: rgba(255, 77, 148, 0.2);
+    color: var(--text-lighter);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .logout-btn:hover {
+    background: rgba(255, 77, 148, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 148, 0.2);
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Estilos da Tabela de Animes */
+  .anime-table-container {
+    padding: 25px;
+    background-color: rgba(10, 10, 10, 0.7);
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .table-title {
+    color: var(--primary);
+    margin-bottom: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: 0 0 15px rgba(255, 77, 148, 0.3);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    width: 350px;
+    height: 45px;
+    border-radius: 30px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--primary);
+    padding: 0 20px;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(255, 77, 148, 0.1);
+    backdrop-filter: blur(5px);
+  }
+  
+  .search-bar:hover {
+    border-color: var(--primary-dark);
+    box-shadow: 0 4px 20px rgba(230, 57, 155, 0.2);
+  }
+  
+  .search-bar i {
+    color: var(--primary);
+    margin-right: 12px;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+  
+  .search-input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-lighter);
+    font-size: 15px;
+    outline: none;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+  
+  .search-input::placeholder {
+    color: rgba(255, 77, 148, 0.7);
+    font-weight: 400;
+  }
+  
+  .search-input:focus {
+    color: var(--primary);
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .anime-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--bg-darker);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .anime-table th {
+    background-color: rgba(255, 77, 148, 0.2);
+    color: var(--primary);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .anime-table th i {
+    margin-right: 8px;
+  }
+  
+  .anime-table td {
+    padding: 15px;
+    color: var(--text-light);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+  }
+  
+  .anime-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .anime-table tr:hover td {
+    background-color: rgba(255, 77, 148, 0.1);
+  }
+  
+  .anime-cover {
+    width: 60px;
+    height: 90px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .rating-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+  
+  .genre-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .table-btn {
+    border: none;
+    background: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 3px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    transition: var(--transition);
+    font-size: 0.9rem;
+  }
+  
+  .table-btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .view-btn:hover {
+    color: var(--primary);
+    background-color: rgba(255, 77, 148, 0.1);
+  }
+  
+  .edit-btn:hover {
+    color: #4dabf7;
+    background-color: rgba(77, 171, 247, 0.1);
+  }
+  
+  .delete-btn:hover {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+  }
+  
+  .anime-table tbody tr {
+    transition: var(--transition);
+  }
+  
+  .anime-table tbody tr:hover {
+    transform: translateX(5px);
+  }
+  
+  /* Estilos do Formulário de Anime */
+  .anime-form-container {
+    position: relative;
+    padding: 30px;
+    margin-bottom: 40px;
+    background: url('../images/anime-bg.jpg') center/cover no-repeat;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(37,0,37,0.9) 0%, rgba(255,20,147,0.2) 100%);
+    z-index: 0;
+  }
+  
+  .form-wrapper {
+    position: relative;
+    padding: 40px;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 25px rgba(255, 77, 148, 0.4),
+                inset 0 0 20px rgba(230, 57, 155, 0.2);
+    z-index: 1;
+  }
+  
+  .anime-form-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(255, 77, 148, 0.5);
+    letter-spacing: 1px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  
+  .full-width {
+    grid-column: span 2;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .form-group input, 
+  .form-group textarea,
+  .form-group select {
+    width: 95%;
+    padding: 14px 16px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    color: var(--text-light);
+    font-size: 15px;
+    transition: var(--transition);
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .form-group input:hover, 
+  .form-group textarea:hover,
+  .form-group select:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .form-group input:focus, 
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 15px var(--primary);
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .file-upload-area {
+    margin-bottom: 30px;
+  }
+  
+  .file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+    border: 2px dashed var(--primary);
+    border-radius: 10px;
+    background-color: rgba(255, 77, 148, 0.05);
+    transition: var(--transition);
+  }
+  
+  .file-input-wrapper:hover {
+    background-color: rgba(255, 77, 148, 0.1);
+    border-color: var(--primary-dark);
+  }
+  
+  .file-input-wrapper input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .file-input-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--primary-dark);
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .file-input-display i {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: var(--primary);
+  }
+  
+  .file-input-display .file-input-label {
+    color: var(--text-light);
+    font-weight: normal;
+    margin: 0;
+  }
+  
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    margin-left: 450px;
+  }
+  
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 18px;
+    margin-top: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 77, 148, 0.3);
+  }
+  
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+  
+  .btn-icon {
+    margin-left: 10px;
+    font-size: 20px;
+    transition: transform 0.3s;
+  }
+  
+  .submit-btn:hover .btn-icon {
+    transform: rotate(90deg);
+  }
+
+  /* Estilos para a tabela */
+.anime-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.anime-table th, .anime-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.anime-table th {
+  background-color: rgba(255, 77, 148, 0.2);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.anime-cover-thumb {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.no-cover-thumb {
+  width: 50px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--text-gray);
+}
+
+.btn-edit, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  color: var(--text-gray);
+  transition: color 0.3s;
+}
+
+.btn-edit:hover {
+  color: #4dabf7;
+}
+
+.btn-delete:hover {
+  color: #ff6b6b;
+}
+
+/* Loading button */
+.submit-btn.loading .btn-text {
+  visibility: hidden;
+}
+
+.submit-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .layout-sidebar {
+      width: 250px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+  
+    .layout-sidebar.active {
+      transform: translateX(0);
+    }
+  
+    .layout-content {
+      margin-left: 0;
+    }
+  
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .table-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .search-bar {
+      width: 100%;
+      margin-top: 15px;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .full-width {
+      grid-column: span 1;
+    }
+  }
+
+/* Estilos para os botões de ação na tabela */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-btn {
+  background: rgba(77, 171, 247, 0.2);
+  color: #4dabf7;
+}
+
+.edit-btn:hover {
+  background: rgba(77, 171, 247, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(77, 171, 247, 0.2);
+}
+
+.delete-btn {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 107, 107, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+}
+
+.action-btn i {
+  font-size: 0.9rem;
+}
+
+/* Estilos para a página de login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4a6baf;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #3a5a9f;
+}
+
+.btn-cancelar{
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 18px;
+    margin-top: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 77, 148, 0.3);
+  }
+  
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+}
+
+/* --- Estilos para a Notificação Animada --- */
+.notificacao-animada {
+    position: fixed; /* Fixa na tela */
+    top: 20px; /* Distância do topo */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajusta a centralização */
+    padding: 15px 25px; /* Espaçamento interno */
+    border-radius: 10px; /* Bordas arredondadas */
+    font-weight: bold; /* Texto em negrito */
+    font-size: 1.1rem; /* Tamanho da fonte */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    opacity: 0; /* Começa invisível */
+    visibility: hidden; /* Esconde do fluxo do documento quando oculto */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out, transform 0.5s ease-in-out; /* Animação suave */
+    display: flex; /* Para alinhar ícone e texto */
+    align-items: center; /* Centraliza verticalmente */
+    gap: 10px; /* Espaço entre ícone e texto */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra para destaque */
+}
+
+/* Estado visível da notificação */
+.notificacao-animada.mostrar {
+    opacity: 1; /* Visível */
+    visibility: visible; /* Torna visível */
+    transform: translateX(-50%) translateY(0); /* Volta à posição original */
+}
+
+/* Estado oculto da notificação (opcional, pode ser usado para animar a saída) */
+.notificacao-animada.ocultar {
+    opacity: 0; /* Invisível */
+    visibility: hidden; /* Esconde */
+    transform: translateX(-50%) translateY(-20px); /* Move para cima ao sair */
+}
+
+/* Estilos para o ícone dentro da notificação */
+.notificacao-animada i.fas {
+    font-size: 1.3rem; /* Tamanho do ícone */
+}
+
+/* Cores específicas (estas serão definidas via JavaScript, mas é bom ter uma base aqui se quiser padronizar) */
+/* .notificacao-animada[data-tipo="sucesso"],
+.notificacao-animada[data-tipo="edicao"] {
+    background-color: var(--primary); 
+    color: var(--dark); 
+}
+
+.notificacao-animada[data-tipo="exclusao"] {
+    background-color: var(--dark); 
+    color: var(--primary); 
+    border: 1px solid var(--primary);
+}
+
+.notificacao-animada[data-tipo="erro"] {
+    background-color: #dc3545; 
+    color: white; 
+} */
+
+/* Adicione estilos para a imagem do avatar se necessário */
+        .avatar-img {
+            width: 100%; /* ou o tamanho desejado */
+            height: 100%; /* ou o tamanho desejado */
+            border-radius: 50%; /* para uma imagem circular */
+            object-fit: cover; /* para cobrir a área sem distorcer */
+        }
+        /* Estilos adicionais para o user-avatar para acomodar a imagem */
+        .user-avatar {
+            width: 40px; /* Exemplo */
+            height: 40px; /* Exemplo */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ccc; /* Cor de fundo para quando não há imagem */
+            color: #fff;
+            font-weight: bold;
+            overflow: hidden; /* Garante que a imagem não vaze */
+        }
+
+/* No seu style.css */
+.image-preview {
+    margin-top: 10px;
+    width: 150px; /* Ou o tamanho desejado */
+    height: 200px; /* Ou o tamanho desejado */
+    border: 1px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}

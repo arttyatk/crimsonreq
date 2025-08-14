@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NakamaList</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ===== VARIÁVEIS GLOBAIS ATUALIZADAS ===== */
+        :root {
+            --primary: #ff2d70;
+            --primary-light: #ff8fab;
+            --primary-dark: #d41a55;
+            --dark: #0a0a0a;
+            --dark-light: #1a1a1a;
+            --dark-lighter: #2a2a2a;
+            --text: #f0f0f0;
+            --text-light: #b0b0b0;
+            --sidebar-width: 280px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 14px;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            --card-shadow-hover: 0 15px 30px rgba(255, 45, 112, 0.2);
+        }
+
+        /* ===== ESTILOS BASE ATUALIZADOS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.7;
+            display: flex;
+            min-height: 100vh;
+            margin-top: 80px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background: var(--dark-lighter);
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .user-profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.8rem;
+            border: 2px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .user-profile:hover img {
+            transform: scale(1.1);
+            border-color: var(--primary-light);
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* ===== CARDS ATUALIZADOS ===== */
+        .card {
+            background: var(--dark-light);
+            border-radius: var(--border-radius);
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-left: 218px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: rgba(255, 45, 112, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 3px;
+        }
+
+        .view-all {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .view-all:hover {
+            color: var(--primary);
+            background: rgba(255, 45, 112, 0.1);
+        }
+
+        /* ===== STATS GRID ATUALIZADO ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+            margin-left: 200px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--dark-light), var(--dark-lighter));
+            padding: 1.8rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 45, 112, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+            text-shadow: 0 2px 10px rgba(255, 45, 112, 0.3);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== ANIME TABLE ATUALIZADA ===== */
+        .anime-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--dark-lighter);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .anime-table th, .anime-table td {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .anime-table th {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            background: rgba(255, 45, 112, 0.1);
+        }
+
+        .anime-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .anime-table tr:hover {
+            background: rgba(255, 45, 112, 0.05);
+        }
+
+        .anime-cover {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .anime-table tr:hover .anime-cover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 45, 112, 0.3);
+        }
+
+        /* ===== CHARTS ATUALIZADOS ===== */
+        .charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            /* Manter essas propriedades é importante para o layout do grid */
+        }
+
+        .chart-container {
+            background: var(--dark-light);
+            border-radius: var(--border-radius);
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            /* Manter essas propriedades */
+        }
+
+        .chart-filter {
+            /* Manter as propriedades existentes */
+            background: var(--dark-lighter);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 15px;
+            margin-top: -10px;
+            font-size: 0.85rem;
+        }
+
+        .chart-filter:hover {
+            border-color: var(--primary);
+        }
+
+        .chart-placeholder {
+            height: 430px;
+            width: 400px; /* Aumente este valor para a altura desejada, por exemplo, 400px */
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+
+        .chart-container:hover .chart-placeholder {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(255, 45, 112, 0.03);
+        }
+
+        /* Ajuste para responsividade se necessário */
+        @media (max-width: 576px) {
+            .charts {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-placeholder {
+                height: 350px; /* Pode ajustar a altura para telas menores se desejar */
+            }
+        }
+
+        /* ===== RECOMENDAÇÕES ATUALIZADAS ===== */
+        .recommendation-item {
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .recommendation-item img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.8rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .recommendation-item:hover img {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(255, 45, 112, 0.3);
+            border-color: var(--primary);
+        }
+
+        .recommendation-item div {
+            text-align: center;
+        }
+
+        .recommendation-item div div:first-child {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            transition: var(--transition);
+        }
+
+        .recommendation-item:hover div div:first-child {
+            color: var(--primary);
+        }
+
+        .recommendation-item div div:last-child {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .latest-animes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .anime-item {
+            background: var(--dark-lighter);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+        }
+
+        .anime-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .anime-info {
+            margin-top: 0.8rem;
+        }
+
+        .anime-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .anime-item:hover .anime-name {
+            color: var(--primary);
+        }
+
+        .anime-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Loading e mensagens de erro */
+        .loading-animes, .no-animes, .error-animes {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .loading-animes i, .error-animes i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .error-animes {
+            color: #ff6b6b;
+        }
+
+        /* Estilo para as imagens dos animes */
+        .anime-cover {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .anime-item:hover .anime-cover {
+            transform: scale(1.03);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(255, 45, 112, 0.3);
+        }
+
+        /* --- Estilos para a Tela de Introdução --- */
+        .intro-screen {
+            position: fixed; /* Posição fixa na tela */
+            top: 0;
+            left: 0;
+            width: 100vw; /* Ocupa toda a largura da viewport */
+            height: 100vh; /* Ocupa toda a altura da viewport */
+            background-color: var(--dark); /* Fundo preto */
+            color: var(--primary); /* Cor do texto rosa */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centraliza o conteúdo verticalmente */
+            align-items: center; /* Centraliza o conteúdo horizontalmente */
+            z-index: 9999; /* Garante que fique acima de todos os outros elementos */
+            opacity: 1; /* Começa totalmente opaco */
+            visibility: visible; /* Começa visível */
+            /* Transição para o fade-out */
+            transition: opacity 1.5s ease-out, visibility 1.5s ease-out;
+        }
+
+        .intro-screen.fade-out {
+            opacity: 0; /* Fica totalmente transparente */
+            visibility: hidden; /* Esconde do fluxo do documento */
+        }
+
+        /* Estilos para o título da intro */
+        .intro-title {
+            font-size: 4.5rem; /* Tamanho grande para o título */
+            font-weight: 700; /* Peso da fonte */
+            margin-bottom: 1.5rem; /* Margem inferior */
+            text-shadow: 0 0 20px rgba(255, 45, 112, 0.6), 0 0 30px rgba(255, 45, 112, 0.4); /* Efeito neon rosa */
+            animation: scaleIn 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* Animação de escala e "bounce" */
+            color: var(--primary); /* Garante a cor rosa */
+        }
+
+        /* Estilos para o slogan da intro */
+        .intro-slogan {
+            font-size: 1.8rem; /* Tamanho do slogan */
+            color: var(--text-light); /* Cor de texto mais clara */
+            opacity: 0; /* Começa invisível */
+            animation: fadeIn 1s ease-out 1s forwards; /* Animação de fade-in com atraso de 1s */
+            letter-spacing: 1px; /* Espaçamento entre letras */
+        }
+
+        /* Keyframe Animations */
+        /* Animação para o título: escala de 0.5 para 1 e fade-in */
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Animação para o slogan: apenas fade-in */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Responsividade para a intro screen */
+        @media (max-width: 768px) {
+            .intro-title {
+                font-size: 3rem;
+            }
+            .intro-slogan {
+                font-size: 1.2rem;
+                text-align: center;
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-title {
+                font-size: 2.5rem;
+            }
+            .intro-slogan {
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                margin-left: 0;
+            }
+            
+            .card {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts {
+                grid-template-columns: 1fr;
+            }
+            
+           
+            
+            .card {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="introScreen" class="intro-screen">
+        <h1 class="intro-title">NakamaList</h1>
+        <p class="intro-slogan">Sua Lista de Animes Favoritos</p>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+        <!-- Estatísticas rápidas -->
+        <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="totalAnimes">0</div>
+            <div class="stat-label">Total de Animes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalUsers">0</div>
+            <div class="stat-label">Usuários cadastrados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="episodios">0</div>
+            <div class="stat-label">Episódios</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="mediaNotas">0.0</div>
+            <div class="stat-label">Nota Média</div>
+        </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts">
+    <!-- Gráfico de Barras - Atividade Mensal -->
+            <div class="chart-container card">
+                <div class="card-header">
+                    <h3 class="card-title">Animes adicionados</h3>
+                    <select class="chart-filter">
+                        <option>Todo período</option>
+                    </select>
+                </div>
+                <div class="chart-placeholder">
+                    <canvas id="graficoAtividade"></canvas>
+                </div>
+            </div>
+
+        <!-- Gráfico de Pizza - Distribuição de Gêneros -->
+        <div class="chart-container card">
+            <div class="card-header">
+                <h3 class="card-title">Distribuição de Gêneros</h3>
+            </div>
+            <div class="chart-placeholder">
+                <canvas id="graficoGeneros"></canvas>
+            </div>
+        </div>
+    </div>
+
+        <!-- Lista de animes recentes -->
+        <div class="card" id="ultimos-animes-card">
+        <div class="card-header">
+            <h3 class="card-title">Últimos Animes Adicionados</h3>
+            <a href="index.html" class="view-all">Ver todos</a>
+        </div>
+        <div class="latest-animes" id="ultimosAnimes">
+            <!-- Os animes serão inseridos dinamicamente aqui -->
+        </div>
+    </div>
+
+    <script src="dashb.js"></script>
+</body>
+</html>

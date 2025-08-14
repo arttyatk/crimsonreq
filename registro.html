@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página de registro segura">
+    <title>Crie sua conta | Sistema</title> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS do design "Crimson Star" */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url(background\ top\ login\ crinsom\(1\).png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-card {
+            width: 450px;
+            background: linear-gradient(145deg, #740606, #5a0000);
+            border-radius: 15px;
+            padding: 50px 40px;
+            box-shadow: 0 10px 25px rgba(90, 0, 0, 0.5),
+                        0 0 30px rgba(201, 26, 26, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+            animation: flutuar 4s ease-in-out infinite;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .neon-border {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 15px;
+            pointer-events: none;
+            box-shadow: inset 0 0 10px rgba(201, 26, 26, 0.3),
+                        inset 0 0 20px rgba(165, 6, 6, 0.2),
+                        inset 0 0 30px rgba(116, 6, 6, 0.1);
+            animation: neon-pulse 3s infinite alternate;
+        }
+
+        @keyframes neon-pulse {
+            0% { box-shadow: inset 0 0 10px rgba(201, 26, 26, 0.3),
+                         inset 0 0 20px rgba(165, 6, 6, 0.2),
+                         inset 0 0 30px rgba(116, 6, 6, 0.1);}
+            100% { box-shadow: inset 0 0 15px rgba(201, 26, 26, 0.4),
+                         inset 0 0 25px rgba(165, 6, 6, 0.3),
+                         inset 0 0 35px rgba(116, 6, 6, 0.2);}
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 80%;
+            background-color: #640000;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 45px 15px 45px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(201, 26, 26, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #c91a1a;
+            box-shadow: 0 0 0 2px rgba(201, 26, 26, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+        }
+
+        .input-group i.fa-user,
+        .input-group i.fa-envelope,
+        .input-group i.fa-lock {
+            left: 15px;
+            color: #b40e0e;
+        }
+
+        .toggle-password {
+            right: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #fff;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 45px;
+            top: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:valid + label {
+            top: -10px;
+            font-size: 0.75rem;
+            background: linear-gradient(145deg, #740606, #5a0000);
+            padding: 0 5px;
+            color: #fff;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #a50606, #b40e0e);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(165, 6, 6, 0.4);
+            margin-top: 15px; /* Adicionado espaço */
+        }
+
+        .login-button:hover {
+            background: linear-gradient(to right, #b40e0e, #c91a1a);
+            box-shadow: 0 6px 20px rgba(201, 26, 26, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .login-links {
+            display: flex;
+            justify-content: center;
+            margin-left: 8px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .login-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201, 26, 26, 0.5), transparent);
+        }
+
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(201, 26, 26, 0.3);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover {
+            background: rgba(201, 26, 26, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(165, 6, 6, 0.3);
+        }
+
+        /* Classes para mensagens de erro/sucesso do JS original */
+        .error-message {
+            color: #ff3333; /* Usando a cor de erro do seu código original */
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            padding-left: 45px; /* Alinha com os inputs */
+        }
+        .error .error-message {
+            display: block;
+        }
+        .error input {
+            border-color: #ff3333 !important;
+        }
+        .success-message {
+            color: #4bb543;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="neon-border"></div>
+            <div class="logo-container">
+                <img src="CRIMSON STAR LOGO(1).png" alt="Crimson Star Logo">
+            </div>
+            
+            <form id="registerForm" novalidate>
+                <h2 style="color: white; text-align: center; margin-bottom: 25px;">Crie sua conta</h2>
+                
+                <div class="success-message" id="successMessage"></div>
+                <div class="error-message" id="globalError"></div>
+
+                <div class="input-group" id="nameGroup">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" name="name" required autocomplete="name">
+                    <label for="name">Nome</label>
+                    <div class="error-message" id="nameError">Por favor, insira seu nome</div>
+                </div>
+
+                <div class="input-group" id="emailGroup">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" required autocomplete="username">
+                    <label for="email">E-mail</label>
+                    <div class="error-message" id="emailError">Por favor, insira um e-mail válido</div>
+                </div>
+
+                <div class="input-group" id="passwordGroup">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+                    <label for="password">Senha</label>
+                    <i class="fas fa-eye toggle-password" aria-label="Mostrar senha"></i>
+                    <div class="error-message" id="passwordError">A senha deve ter pelo menos 8 caracteres</div>
+                </div>
+
+                <div class="input-group" id="confirmPasswordGroup">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" name="password_confirmation" required minlength="8" autocomplete="new-password">
+                    <label for="confirmPassword">Confirmar Senha</label>
+                    <i class="fas fa-eye toggle-password" aria-label="Mostrar senha"></i>
+                    <div class="error-message" id="confirmPasswordError">As senhas não coincidem</div>
+                </div>
+
+                <button type="submit" class="login-button" name="submitRegister">Cadastrar-se</button>
+            </form>
+
+            <div class="divider">OU</div>
+            <div class="social-login">
+                <button type="button" class="social-btn"><i class="fab fa-google"></i></button>
+                <button type="button" class="social-btn"><i class="fab fa-twitter"></i></button>
+                <button type="button" class="social-btn"><i class="fab fa-facebook-f"></i></button>
+                <button type="button" class="social-btn"><i class="fab fa-discord"></i></button>
+            </div>
+
+            <div class="login-links">
+                <a href="/login.html" id="loginLink">Já possui uma conta?</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="registroo.js"></script>
+    <script>
+        // Lógica de mostrar/ocultar senha para os novos inputs
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', () => {
+                const passwordInput = button.previousElementSibling;
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                button.classList.toggle('fa-eye');
+                button.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+</body>
+</html>

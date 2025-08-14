@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nakama List - Popularidade</title>
+    <link rel="stylesheet" href="tabelage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Variáveis de cor (se não estiverem em tabelage.css) */
+        :root {
+            --primary: #ff2d70; /* Rosa Claro */ /* #FFC0CB */
+            --primary-dark: #FF69B4; /* Rosa Médio / Hot Pink */
+            --secondary-color: #000000; /* Preto */
+            --background-dark: #121212; /* Preto Quase Pura */
+            --background-light: rgba(25, 25, 25, 0.85); /* Preto Levemente Transparente */
+            --text-primary: #f0f0f0; /* Branco Suave */
+            --text-secondary: #aaaaaa;
+            --input-bg: #2b2b2b; /* Cinza mais escuro para os inputs */
+            --error-color: #ff3333;
+            --success-color: #4bb543;
+            --transition: all 0.3s ease;
+            --text-lighter: #ffffff; /* Exemplo, ajuste conforme sua paleta */
+            --text-gray: #b0b0b0; /* Exemplo, ajuste conforme sua paleta */
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-lighter);
+            margin-bottom: 2px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-name:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--text-gray);
+            opacity: 0.8;
+        }
+
+        /* Novas regras para o filters-container */
+        .filters-container {
+            background-color: var(--background-light); /* Fundo sutil */
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex; /* Usando flexbox para alinhar os itens */
+            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha em telas menores */
+            gap: 1.5rem; /* Espaçamento entre os grupos de filtros */
+            align-items: center; /* Alinha verticalmente no centro */
+            justify-content: flex-start; /* Alinha ao início */
+        }
+
+        .filters-container form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem; /* Espaçamento entre os elementos do formulário */
+            align-items: center;
+            width: 100%; /* Ocupa a largura total do container */
+        }
+
+        .filters-container label {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-right: 0.5rem; /* Espaçamento entre o label e o input */
+            white-space: nowrap; /* Evita que o texto do label quebre */
+        }
+
+        .filters-container .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Espaçamento entre label e input dentro do grupo */
+        }
+        
+        .filters-container .input-estilizado {
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 80px; /* Largura fixa para os inputs de número */
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .filters-container .input-estilizado:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 192, 203, 0.3);
+        }
+
+        .filtro-btn {
+            background-color: var(--primary); /* Cor do botão de filtrar */
+            color: var(--secondary-color); /* Cor do texto/ícone do botão */
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition), transform var(--transition);
+            display: flex; /* Para alinhar o ícone e o texto */
+            align-items: center;
+            gap: 0.5rem; /* Espaçamento entre ícone e texto */
+        }
+
+        .filtro-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.4);
+        }
+
+        .filtro-btn i {
+            font-size: 1rem;
+        }
+
+        /* Responsividade para o filters-container */
+        @media (max-width: 768px) {
+            .filters-container form {
+                flex-direction: column; /* Empilha os campos em telas pequenas */
+                align-items: flex-start;
+            }
+            .filters-container .input-group {
+                width: 100%; /* Ocupa largura total */
+                justify-content: flex-start;
+            }
+            .filters-container .input-estilizado {
+                width: 100px; /* Um pouco mais largo em mobile se necessário */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="layout-sidebar">
+        <nav>
+            <div class="layout-favicon"></div>
+            
+            <h2>Navegação</h2>
+            <ul>
+                <li><a href="inicial.html"><i class="fas fa-home"></i> Início</a></li>
+            </ul>
+            
+            <h2>Animes</h2>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-list"></i> Todos os Animes</a></li>
+            </ul>
+    
+            <h2>Classificações</h2>
+            <ul>
+                <li><a href="nota.html"><i class="fas fa-star"></i> Por Nota</a></li>
+                <li><a href="popularidade.html"><i class="fas fa-chart-line"></i> Por Popularidade</a></li>
+                <li><a href="generos.html"><i class="fas fa-sort-amount-desc"></i> Por Gênero</a></li>
+            </ul>
+
+            <h2>Certificado</h2>
+            <ul>
+                <li><a href="epdf.html"><i class="fas fa-star"></i> Gerar certificado </a></li>
+            </ul>
+
+            <h2>Informações gerais</h2>
+            <ul>
+                <li><a href="dashbor.html"><i class="fas fa-star"></i> Dashboard</a></li>
+            </ul>
+    
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">
+                        V 
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Visitante</div>
+                        <div class="user-email" id="userEmail">Faça login</div>
+                    </div>
+                </div>
+
+                <button type="button" class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </nav>
+      </aside>
+
+    <div class="layout-content">
+
+        <div class="anime-table-container">
+            <div class="table-header">
+                <h2 class="table-title">Lista de Animes</h2>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input class="search-input" placeholder="Pesquisar anime..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <form id="popularityFilterForm" onsubmit="aplicarFiltroPopularidade(); return false;">
+                    <div class="input-group">
+                        <label for="popuMin">Popularidade mínima:</label>
+                        <input type="number" id="popuMin" class="input-estilizado" min="0" placeholder="ex: 100">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="popuMax">Popularidade máxima:</label>
+                        <input type="number" id="popuMax" class="input-estilizado" min="0" placeholder="ex: 1000">
+                    </div>
+
+                    <button type="submit" class="filtro-btn">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                </form>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="anime-table" id="animeTable">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-image"></i> Capa</th>
+                            <th><i class="fas fa-heading"></i> Título</th>
+                            <th><i class="fas fa-star"></i> Nota</th>
+                            <th><i class="fas fa-star"></i> Popularidade</th>
+                            <th><i class="fas fa-calendar-alt"></i> Lançamento</th>
+                            <th><i class="fas fa-tags"></i> Gêneros</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="animeTableBody">
+                        </tbody>
+                </table>
+            </div>
+            
+        <button id="mobileMenuToggle" class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="popularidade.js"></script>    
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nakama List</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <div id="notificacao-animada" class="notificacao-animada ocultar"></div>
+
+  <!-- Sidebar fixa -->
+  <aside class="layout-sidebar">
+    <nav>
+      <div class="layout-favicon"></div>
+      
+      <h2>Navegação</h2>
+      <ul>
+        <li><a href="inicial.html"><i class="fas fa-home"></i> Início</a></li>
+      </ul>
+      
+      <h2>Animes</h2>
+      <ul>
+        <li><a href="index.html"><i class="fas fa-list"></i> Todos os Animes</a></li>
+      </ul>
+
+      <h2>Classificações</h2>
+      <ul>
+        <li><a href="nota.html"><i class="fas fa-star"></i> Por Nota</a></li>
+        <li><a href="popularidade.html"><i class="fas fa-chart-line"></i> Por Popularidade</a></li>
+        <li><a href="generos.html"><i class="fas fa-sort-amount-desc"></i> Por Gênero</a></li>
+      </ul>
+
+      <h2>Certificado</h2>
+      <ul>
+        <li><a href="epdf.html"><i class="fas fa-star"></i> Gerar certificado </a></li>
+      </ul>
+
+      <h2>Informações gerais</h2>
+      <ul>
+        <li><a href="dashbor.html"><i class="fas fa-star"></i> Dashboard</a></li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="userAvatar">V</div>
+          <div class="user-info">
+            <div class="user-name" id="userName">Visitante</div>
+            <div class="user-email" id="userEmail">Faça login</div>
+          </div>
+        </div>
+
+        <button type="button" class="logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo principal -->
+  <div class="layout-content">
+    <!-- Formulário de Cadastro -->
+    <div class="anime-form-container">
+      
+      <div class="form-wrapper">
+        <h1>Cadastrar Novo Anime</h1>
+        
+        <form id="animeForm" method="POST" enctype="multipart/form-data">
+
+          <div class="form-group full-width">
+              <label for="cover_image">Capa do Anime (Opcional)</label>
+              <input type="file" id="cover_image" name="cover_image" accept="image/*">
+              <div id="imagePreview" class="image-preview"></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome">Nome do Anime*</label>
+              <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+              <label for="titulo_alternativo">Título Alternativo</label>
+              <input type="text" id="titulo_alternativo" name="titulo_alternativo">
+            </div>
+
+            <div class="form-group">
+              <label for="nota">Nota (0-10)*</label>
+              <input type="number" id="nota" name="nota" min="0" max="10" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="popularidade">Popularidade*</label>
+              <input type="number" id="popularidade" name="popularidade" min="0" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="generos">Gêneros* (separados por vírgula)</label>
+              <input type="text" id="generos" name="generos" required placeholder="Ex: Ação, Aventura, Fantasia">
+            </div>
+
+            <div class="form-group">
+              <label for="autor">Autor</label>
+              <input type="text" id="autor" name="autor">
+            </div>
+
+            <div class="form-group">
+              <label for="estudio">Estúdio</label>
+              <input type="text" id="estudio" name="estudio">
+            </div>
+
+            <div class="form-group">
+              <label for="ano_lancamento">Ano de Lançamento</label>
+              <input type="number" id="ano_lancamento" name="ano_lancamento" min="1900">
+            </div>
+
+            <div class="form-group">
+              <label for="episodios">Número de Episódios*</label>
+              <input type="number" id="episodios" name="episodios" min="0" required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" name="descricao" required placeholder="Ex: O protagonista encontra um tesouro..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span class="btn-text">Cadastrar Anime</span>
+            <i class="fas fa-plus-circle btn-icon"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabela de Animes -->
+    <div class="anime-table-container">
+      <div class="table-header">
+        <h2 class="table-title">Lista de Animes</h2>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input class="search-input" placeholder="Pesquisar anime..." id="searchInput">
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="anime-table" id="animeTable">
+          <thead>
+            <tr>
+              <th><i class="fas fa-image"></i> Capa</th>
+              <th><i class="fas fa-heading"></i> Título</th>
+              <th><i class="fas fa-star"></i> Nota</th>
+              <th><i class="fas fa-star"></i> Popularidade</th>
+              <th><i class="fas fa-calendar-alt"></i> Lançamento</th>
+              <th><i class="fas fa-tags"></i> Gêneros</th>
+              <th><i class="fas fa-cog"></i> Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dados serão inseridos via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Botão de menu mobile -->
+    <button id="mobileMenuToggle" class="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <script src="sim.js"></script>
+</body>
+</html>

@@ -1,0 +1,1015 @@
+:root {
+    --primary: #ff4d94;
+    --primary-dark: #e6399b;
+    --bg-dark: #121212;
+    --bg-darker: #0a0a0a;
+    --text-light: #e0e0e0;
+    --text-lighter: #ffffff;
+    --text-gray: #b0b0b0;
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+  }
+  
+  .layout-sidebar {
+    width: 300px;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-light);
+    padding: 30px 25px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  
+  .layout-content {
+    margin-left: 300px;
+    flex: 1;
+    background-color: var(--bg-dark);
+    overflow-x: hidden;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 20px;
+  }
+  
+  .layout-favicon {
+    width: 140px;
+    height: 140px;
+    background-image: url('logosemfundo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto 40px;
+    filter: drop-shadow(0 0 15px rgba(255, 77, 148, 0.6));
+    transition: var(--transition);
+  }
+  
+  .layout-sidebar nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .layout-sidebar nav h2 {
+    margin: 20px 0 15px;
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 8px;
+    opacity: 0.8;
+  }
+  
+  .layout-sidebar nav h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+  }
+  
+  .layout-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+  
+  .layout-sidebar nav ul li {
+    margin: 8px 0;
+    transition: var(--transition);
+  }
+  
+  .layout-sidebar nav ul li a {
+    color: var(--text-gray);
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .layout-sidebar nav ul li a:hover {
+    color: var(--text-lighter);
+    background-color: rgba(255, 77, 148, 0.15);
+    transform: translateX(5px);
+  }
+  
+  .layout-sidebar nav ul li a i {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 14px;
+  }
+  
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-email {
+    font-size: 12px;
+    color: var(--text-gray);
+    opacity: 0.8;
+  }
+  
+  .logout-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: rgba(255, 77, 148, 0.2);
+    color: var(--text-lighter);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .logout-btn:hover {
+    background: rgba(255, 77, 148, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 77, 148, 0.2);
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Estilos da Tabela de Animes */
+  .anime-table-container {
+    padding: 25px;
+    background-color: rgba(10, 10, 10, 0.7);
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .table-title {
+    color: var(--primary);
+    margin-bottom: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: 0 0 15px rgba(255, 77, 148, 0.3);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    width: 350px;
+    height: 45px;
+    border-radius: 30px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--primary);
+    padding: 0 20px;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(255, 77, 148, 0.1);
+    backdrop-filter: blur(5px);
+  }
+  
+  .search-bar:hover {
+    border-color: var(--primary-dark);
+    box-shadow: 0 4px 20px rgba(230, 57, 155, 0.2);
+  }
+  
+  .search-bar i {
+    color: var(--primary);
+    margin-right: 12px;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+  
+  .search-input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-lighter);
+    font-size: 15px;
+    outline: none;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+  
+  .search-input::placeholder {
+    color: rgba(255, 77, 148, 0.7);
+    font-weight: 400;
+  }
+  
+  .search-input:focus {
+    color: var(--primary);
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .anime-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--bg-darker);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .anime-table th {
+    background-color: rgba(255, 77, 148, 0.2);
+    color: var(--primary);
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .anime-table th i {
+    margin-right: 8px;
+  }
+  
+  .anime-table td {
+    padding: 15px;
+    color: var(--text-light);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+  }
+  
+  .anime-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .anime-table tr:hover td {
+    background-color: rgba(255, 77, 148, 0.1);
+  }
+  
+  .anime-cover {
+    width: 60px;
+    height: 90px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .rating-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+  
+  .genre-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .table-btn {
+    border: none;
+    background: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 3px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    transition: var(--transition);
+    font-size: 0.9rem;
+  }
+  
+  .table-btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .view-btn:hover {
+    color: var(--primary);
+    background-color: rgba(255, 77, 148, 0.1);
+  }
+  
+  .edit-btn:hover {
+    color: #4dabf7;
+    background-color: rgba(77, 171, 247, 0.1);
+  }
+  
+  .delete-btn:hover {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+  }
+  
+  .anime-table tbody tr {
+    transition: var(--transition);
+  }
+  
+  .anime-table tbody tr:hover {
+    transform: translateX(5px);
+  }
+  
+  /* Estilos do Formulário de Anime */
+  .anime-form-container {
+    position: relative;
+    padding: 30px;
+    margin-bottom: 40px;
+    background: url('../images/anime-bg.jpg') center/cover no-repeat;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(37,0,37,0.9) 0%, rgba(255,20,147,0.2) 100%);
+    z-index: 0;
+  }
+  
+  .form-wrapper {
+    position: relative;
+    padding: 40px;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 25px rgba(255, 77, 148, 0.4),
+                inset 0 0 20px rgba(230, 57, 155, 0.2);
+    z-index: 1;
+  }
+  
+  .anime-form-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(255, 77, 148, 0.5);
+    letter-spacing: 1px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  
+  .full-width {
+    grid-column: span 2;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .form-group input, 
+  .form-group textarea,
+  .form-group select {
+    width: 95%;
+    padding: 14px 16px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    color: var(--text-light);
+    font-size: 15px;
+    transition: var(--transition);
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .form-group input:hover, 
+  .form-group textarea:hover,
+  .form-group select:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .form-group input:focus, 
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 15px var(--primary);
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .file-upload-area {
+    margin-bottom: 30px;
+  }
+  
+  .file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+    border: 2px dashed var(--primary);
+    border-radius: 10px;
+    background-color: rgba(255, 77, 148, 0.05);
+    transition: var(--transition);
+  }
+  
+  .file-input-wrapper:hover {
+    background-color: rgba(255, 77, 148, 0.1);
+    border-color: var(--primary-dark);
+  }
+  
+  .file-input-wrapper input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .file-input-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--primary-dark);
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .file-input-display i {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: var(--primary);
+  }
+  
+  .file-input-display .file-input-label {
+    color: var(--text-light);
+    font-weight: normal;
+    margin: 0;
+  }
+  
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 18px;
+    margin-top: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 77, 148, 0.3);
+  }
+  
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+  
+  .btn-icon {
+    margin-left: 10px;
+    font-size: 20px;
+    transition: transform 0.3s;
+  }
+  
+  .submit-btn:hover .btn-icon {
+    transform: rotate(90deg);
+  }
+
+  /* Estilos para a tabela */
+.anime-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.anime-table th, .anime-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.anime-table th {
+  background-color: rgba(255, 77, 148, 0.2);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.anime-cover-thumb {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.no-cover-thumb {
+  width: 50px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--text-gray);
+}
+
+.btn-edit, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  color: var(--text-gray);
+  transition: color 0.3s;
+}
+
+.btn-edit:hover {
+  color: #4dabf7;
+}
+
+.btn-delete:hover {
+  color: #ff6b6b;
+}
+
+/* Loading button */
+.submit-btn.loading .btn-text {
+  visibility: hidden;
+}
+
+.submit-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-buttons button {
+  background: rgba(255, 77, 148, 0.15);
+  color: var(--text-lighter);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(255, 77, 148, 0.1);
+}
+
+.filter-buttons button:hover {
+  background: rgba(255, 77, 148, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 77, 148, 0.2);
+  border-color: var(--primary);
+}
+
+/* Estilos personalizados para as checkboxes - Linha única */
+.filters-container label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    color: #eee; /* Cor do texto do gênero */
+    font-size: 0.95rem;
+}
+
+.filters-container input[type="checkbox"] {
+    display: none; /* Esconde o checkbox padrão */
+}
+
+.checkmark {
+    height: 18px;
+    width: 18px;
+    background-color: #333; /* Fundo do quadrado da checkbox */
+    border: 2px solid #ff4d94; /* Borda rosa */
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    flex-shrink: 0; /* Impede que ele encolha */
+}
+
+.filters-container input[type="checkbox"]:checked + .checkmark {
+    background-color: #ff4d94; /* Fundo rosa quando marcado */
+    border-color: #ff4d94;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.filters-container input[type="checkbox"]:checked + .checkmark:after {
+    display: block;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Estilos para a tabela */
+.anime-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden; /* Para bordas arredondadas */
+}
+
+.anime-table th, .anime-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    color: #eee;
+}
+
+.anime-table thead th {
+    background-color: #222;
+    color: #ff4d94;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.anime-table tbody tr:nth-child(even) {
+    background-color: #1f1f1f;
+}
+
+.anime-table tbody tr:hover {
+    background-color: #2a2a2a;
+    cursor: pointer;
+}
+
+.anime-cover {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+
+.genre-tag {
+    background-color: #333;
+    color: #ddd;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-right: 5px;
+    white-space: nowrap; /* Impede quebras de linha dentro do tag */
+}
+
+/* Botões de ação */
+.action-btn {
+    background-color: #ff4d94;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.3s ease;
+    margin-right: 5px; /* Espaço entre os botões */
+}
+
+.action-btn.edit-btn {
+    background-color: #007bff; /* Azul para editar */
+}
+
+.action-btn.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.action-btn.delete-btn {
+    background-color: #dc3545; /* Vermelho para excluir */
+}
+
+.action-btn.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Estilos responsivos para a tabela */
+@media (max-width: 768px) {
+    .anime-table thead {
+        display: none; /* Esconde o cabeçalho da tabela em telas pequenas */
+    }
+
+    .anime-table, .anime-table tbody, .anime-table tr, .anime-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .anime-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .anime-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .anime-table td::before {
+        content: attr(data-label); /* Usa o atributo data-label para o "cabeçalho" */
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+        color: #ff91c6;
+    }
+    .anime-table td:nth-child(1)::before { content: "Capa:"; }
+    .anime-table td:nth-child(2)::before { content: "Título:"; }
+    .anime-table td:nth-child(3)::before { content: "Nota:"; }
+    .anime-table td:nth-child(4)::before { content: "Popularidade:"; }
+    .anime-table td:nth-child(5)::before { content: "Lançamento:"; }
+    .anime-table td:nth-child(6)::before { content: "Gêneros:"; }
+    .anime-table td:nth-child(7)::before { content: "Ações:"; }
+
+    .anime-table td .anime-cover {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+}
+
+/* Efeito quando a checkbox está focada */
+.genre-checkbox:focus-visible ~ .checkmark {
+  box-shadow: 0 0 0 3px rgba(255, 77, 148, 0.3);
+}
+
+.filters-container {
+  margin: 15px 0;
+}
+
+#filterForm {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px; 
+  flex-wrap: wrap; 
+}
+
+#filterForm label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+#filterForm input {
+  margin-bottom: 0; 
+}
+
+.filtro-btn {
+  height: 42px; 
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ===== VARIÁVEIS GLOBAIS (Certifique-se que estas estão no seu CSS) ===== */
+:root {
+    --primary: #ff2d70; /* Rosa principal */
+    --primary-light: #ff8fab; /* Rosa mais claro */
+    --primary-dark: #d41a55; /* Rosa mais escuro */
+    --dark: #0a0a0a; /* Fundo muito escuro */
+    --dark-light: #1a1a1a; /* Fundo um pouco mais claro */
+    --dark-lighter: #2a2a2a; /* Fundo mais claro ainda */
+    --text: #f0f0f0; /* Cor do texto claro */
+    --text-light: #b0b0b0; /* Cor do texto mais claro */
+    --border-radius: 14px; /* Raio de borda padrão */
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transição suave */
+    --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para o container de filtros */
+.filters-container {
+    /* Removido: background: var(--dark-light); */ /* Fundo do container do filtro */
+    background-color: transparent; /* Fundo transparente */
+    border-radius: var(--border-radius); /* Borda arredondada */
+    padding: 1.5rem 2rem; /* Espaçamento interno */
+    margin-bottom: 2rem; /* Margem inferior para separar da tabela */
+    box-shadow: none; /* Removida a sombra */
+    border: none; /* Removida a borda */
+    display: flex; /* Para alinhar os itens horizontalmente */
+    flex-wrap: wrap; /* Permite que os itens quebrem linha em telas menores */
+    gap: 1.5rem; /* Espaçamento entre os itens do formulário */
+    align-items: center; /* Alinha verticalmente os itens */
+    justify-content: space-between; /* Espaça os itens */
+    transition: none; /* Removida a transição */
+}
+
+/* Removido o efeito de hover */
+/*
+.filters-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(255, 45, 112, 0.2);
+    border-color: var(--primary);
+}
+*/
+
+/* Estilos para o formulário dentro do container */
+.filters-container form {
+    display: flex; /* Usa flexbox para os elementos do formulário */
+    flex-wrap: wrap; /* Permite quebrar linha */
+    gap: 1rem; /* Espaçamento entre os elementos do formulário (label, input, button) */
+    align-items: center; /* Alinha os itens verticalmente */
+    width: 100%; /* Ocupa a largura total do container */
+}
+
+/* Estilos para as labels */
+.filters-container label {
+    color: var(--text-light); /* Cor do texto da label */
+    font-size: 0.95rem; /* Tamanho da fonte */
+    font-weight: 500; /* Peso da fonte */
+    white-space: nowrap; /* Evita que a label quebre linha */
+}
+
+/* Estilos para os campos de input */
+.filters-container input[type="number"] {
+    background-color: var(--dark-lighter); /* Fundo do input */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Borda sutil */
+    border-radius: 8px; /* Borda arredondada */
+    padding: 0.7rem 1rem; /* Espaçamento interno */
+    color: var(--text); /* Cor do texto digitado */
+    font-size: 1rem; /* Tamanho da fonte */
+    transition: var(--transition); /* Transição suave */
+    outline: none; /* Remove o contorno padrão no foco */
+    flex-grow: 1; /* Permite que o input cresça */
+    max-width: 150px; /* Largura máxima para inputs numéricos */
+}
+
+.filters-container input[type="number"]:focus {
+    border-color: var(--primary); /* Borda rosa no foco */
+    box-shadow: 0 0 0 3px rgba(255, 45, 112, 0.3); /* Sombra de foco rosa */
+    background-color: var(--dark); /* Fundo um pouco mais escuro no foco */
+}
+
+/* Estilos para o placeholder dos inputs */
+.filters-container input::placeholder {
+    color: var(--text-light); /* Cor do placeholder */
+    opacity: 0.7; /* Opacidade do placeholder */
+}
+
+/* Estilos para o botão de filtro */
+.filters-container button[type="submit"] {
+    background: linear-gradient(to right, var(--primary), var(--primary-light)); /* Degradê rosa */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda */
+    border-radius: 8px; /* Borda arredondada */
+    padding: 0.8rem 1.8rem; /* Espaçamento interno */
+    font-size: 1rem; /* Tamanho da fonte */
+    font-weight: 600; /* Peso da fonte */
+    cursor: pointer; /* Cursor de mãozinha */
+    transition: var(--transition); /* Transição suave */
+    box-shadow: 0 5px 15px rgba(255, 45, 112, 0.3); /* Sombra para o botão */
+    letter-spacing: 0.5px; /* Espaçamento entre letras */
+}
+
+.filters-container button[type="submit"]:hover {
+    background: linear-gradient(to left, var(--primary-dark), var(--primary)); /* Degradê invertido no hover */
+    transform: translateY(-2px); /* Pequeno levantamento no hover */
+    box-shadow: 0 8px 20px rgba(255, 45, 112, 0.4); /* Sombra mais intensa no hover */
+}
+
+/* Ajustes responsivos para o container de filtros */
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column; /* Empilha os itens em telas menores */
+        align-items: flex-start; /* Alinha os itens à esquerda */
+        gap: 1rem; /* Reduz o espaçamento */
+        padding: 1.2rem 1.5rem;
+    }
+
+    .filters-container form {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .filters-container input[type="number"] {
+        max-width: 100%; /* Ocupa a largura total em mobile */
+        width: 100%; /* Garante que ocupe a largura total */
+    }
+
+    .filters-container button[type="submit"] {
+        width: 100%; /* Botão ocupa a largura total em mobile */
+    }
+}

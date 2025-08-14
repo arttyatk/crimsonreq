@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página de login segura Crimson Star">
+    <title>CrimsonStar - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #c91a1a;
+            --dark-red: #740606;
+            --background-gradient: linear-gradient(145deg, #740606, #5a0000);
+            --text-color: rgba(255, 255, 255, 0.9);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --input-bg: rgba(0, 0, 0, 0.2);
+            --input-border: rgba(201, 26, 26, 0.5);
+            --error-color: #ff3333;
+            --success-color: #4bb543;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url("background top login crinsom(1).png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-card {
+            width: 450px;
+            background: var(--background-gradient);
+            border-radius: 15px;
+            padding: 50px 40px;
+            box-shadow: 0 10px 25px rgba(90, 0, 0, 0.5),
+                        0 0 30px rgba(201, 26, 26, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+            animation: flutuar 4s ease-in-out infinite;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .neon-border {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 15px;
+            pointer-events: none;
+            box-shadow: inset 0 0 10px rgba(201, 26, 26, 0.3),
+                        inset 0 0 20px rgba(165, 6, 6, 0.2),
+                        inset 0 0 30px rgba(116, 6, 6, 0.1);
+            animation: neon-pulse 3s infinite alternate;
+        }
+
+        @keyframes neon-pulse {
+            0% { box-shadow: inset 0 0 10px rgba(201, 26, 26, 0.3),
+                                inset 0 0 20px rgba(165, 6, 6, 0.2),
+                                inset 0 0 30px rgba(116, 6, 6, 0.1);}
+            100% { box-shadow: inset 0 0 15px rgba(201, 26, 26, 0.4),
+                                inset 0 0 25px rgba(165, 6, 6, 0.3),
+                                inset 0 0 35px rgba(116, 6, 6, 0.2);}
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 80%;
+            background-color: #640000;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 45px 15px 45px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(201, 26, 26, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+        }
+        
+        .input-group i.fa-user,
+        .input-group i.fa-lock {
+            left: 15px;
+            color: #b40e0e;
+        }
+        
+        .input-group .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .input-group .toggle-password:hover {
+            color: #fff;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 45px;
+            top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            pointer-events: none;
+            background-color: transparent;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:valid + label {
+            top: -10px;
+            font-size: 0.75rem;
+            background: var(--background-gradient);
+            padding: 0 5px;
+            color: #fff;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #a50606, #b40e0e);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(165, 6, 6, 0.4);
+        }
+
+        .login-button:hover {
+            background: linear-gradient(to right, #b40e0e, #c91a1a);
+            box-shadow: 0 6px 20px rgba(201, 26, 26, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .login-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .login-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201, 26, 26, 0.5), transparent);
+        }
+
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover {
+            background: rgba(201, 26, 26, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(165, 6, 6, 0.3);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            text-align: left;
+            padding-left: 45px;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .form-group.error .input-group input {
+            border-color: var(--error-color);
+        }
+
+        .success-message {
+            color: var(--success-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 1rem;
+        }
+        
+    </style>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="neon-border"></div>
+            <div class="logo-container">
+                <img src="CRIMSON STAR LOGO(1).png" alt="Crimson Star Logo">
+            </div>
+            <form class="login-form" id="loginForm" novalidate>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="input-group form-group" id="emailGroup">
+                    <i class="fas fa-user"></i>
+                    <input type="email" id="email" name="email" required autocomplete="username">
+                    <label for="email">E-mail</label>
+                    <div class="error-message" id="emailError">Por favor, insira um e-mail válido</div>
+                </div>
+
+                <div class="input-group form-group" id="passwordGroup">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required minlength="8" autocomplete="current-password">
+                    <label for="password">Senha</label>
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                    <div class="error-message" id="passwordError">A senha deve ter pelo menos 8 caracteres</div>
+                </div>
+
+                <button type="submit" class="login-button">ENTRAR</button>
+
+                <div class="login-links">
+                    <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                    <a href="registro.html" id="registerLink">Criar conta</a>
+                </div>
+                
+                <div class="divider">OU</div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn" aria-label="Login com Google"><i class="fab fa-google"></i></button>
+                    <button type="button" class="social-btn" aria-label="Login com Twitter"><i class="fab fa-twitter"></i></button>
+                    <button type="button" class="social-btn" aria-label="Login com Facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button type="button" class="social-btn" aria-label="Login com Discord"><i class="fab fa-discord"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="loginn.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Script de Partículas
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 100;
+            const particleColors = ['#c91a1a', '#FFFFFF', '#a50606', '#f0f0f0'];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor(x, y, radius, color, velocity) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = radius;
+                    this.color = color;
+                    this.velocity = velocity;
+                    this.alpha = 1;
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                update() {
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    this.alpha -= 0.003;
+
+                    if (this.alpha <= 0 || this.x < -this.radius || this.x > canvas.width + this.radius || this.y < -this.radius || this.y > canvas.height + this.radius) {
+                        this.reset();
+                    }
+                }
+
+                reset() {
+                    this.radius = Math.random() * 2 + 1;
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = (Math.random() * 0.5) + 0.3;
+                    this.velocity = {
+                        x: Math.cos(angle) * speed,
+                        y: Math.sin(angle) * speed
+                    };
+                    this.alpha = 1;
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    const radius = Math.random() * 2 + 1;
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = (Math.random() * 0.5) + 0.3;
+                    const velocity = {
+                        x: Math.cos(angle) * speed,
+                        y: Math.sin(angle) * speed
+                    };
+                    particles.push(new Particle(x, y, radius, color, velocity));
+                }
+            }
+
+            function animateParticles() {
+                requestAnimationFrame(animateParticles);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+            }
+
+            initParticles();
+            animateParticles();
+
+            // Toggle de senha
+            if (togglePasswordButton && passwordInput) {
+                togglePasswordButton.addEventListener('click', () => {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    togglePasswordButton.classList.toggle('fa-eye');
+                    togglePasswordButton.classList.toggle('fa-eye-slash');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
