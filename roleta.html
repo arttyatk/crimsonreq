@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abertura de Caixa</title>
+    <style>
+        /* ======== SEU ESTILO BASE ======== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            background-image: url("backroleta.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body::before{
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: brightness(0.9);
+            z-index: -1;
+
+        }
+
+    h1 {
+    color: #ff0000;
+    text-shadow: 
+        0 0 5px rgba(255, 0, 0, 0.8),
+        0 0 10px rgba(255, 50, 50, 0.6),
+        0 0 15px rgba(255, 100, 100, 0.4),
+        0 0 20px rgba(255, 150, 150, 0.2);
+    font-size: 3em;
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
+    animation: glow 2s ease-in-out infinite alternate;
+    margin-top: 20px;
+}
+
+h1:before, h1:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ff0000);
+}
+
+h1:before {
+    left: -50px;
+}
+
+h1:after {
+    right: -50px;
+    background: linear-gradient(90deg, #ff0000, transparent);
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 
+            0 0 5px rgba(255, 0, 0, 0.8),
+            0 0 10px rgba(255, 50, 50, 0.6),
+            0 0 15px rgba(255, 100, 100, 0.4);
+    }
+    to {
+        text-shadow: 
+            0 0 10px rgba(255, 0, 0, 0.8),
+            0 0 20px rgba(255, 50, 50, 0.6),
+            0 0 30px rgba(255, 100, 100, 0.4),
+            0 0 40px rgba(255, 150, 150, 0.2);
+    }
+}
+        .roulette-container {
+            width: 100%;
+            max-width: 1300px;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            margin-bottom: 60px;
+               /* Mantendo a estrutura original com melhorias */
+            background-color: #171717;
+            color: #ffffff;
+            border-radius: 8px;
+             padding: 25px;
+             max-width: 10000px;
+           
+    
+    /* Aprimoramentos visuais sutis */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    
+    /* Transição suave para interações */
+    transition: all 0.3s ease;
+        }
+
+.center-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 200px solid #ff0000;
+    z-index: 10;
+    margin-top: 60px;
+    
+    /* Melhorias adicionadas */
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.95;
+}
+
+/* Efeito hover sutil */
+.center-arrow:hover {
+    border-bottom-color: #ff3333;
+    transform: translateX(-50%) translateY(-3px);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
+}
+
+/* Efeito de clique */
+.center-arrow:active {
+    transform: translateX(-50%) translateY(1px);
+    transition: all 0.1s ease;
+}
+
+/* Versão alternativa para sucesso */
+.center-arrow.success {
+    border-bottom-color: #4CAF50;
+    filter: drop-shadow(0 4px 6px rgba(76, 175, 80, 0.3));
+}
+
+/* Animação de pulsação opcional */
+@keyframes arrow-pulse {
+    0% { opacity: 0.95; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.95; }
+}
+
+.center-arrow.pulse {
+    animation: arrow-pulse 2s infinite ease-in-out;
+}
+
+/* Adaptação responsiva */
+@media (max-width: 768px) {
+    .center-arrow {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 150px solid #ff0000;
+        margin-top: 40px;
+    }
+}
+
+        .roulette {
+            display: flex;
+            position: relative;
+            left: 0;
+            top: 0;
+            transform: translateX(0);
+            /* Transição desativada: usamos RAF para a desaceleração realista */
+            transition: none;
+            filter: blur(0px);
+        }
+        
+        .roulette.spinning { /* Mantém só o motion blur nos itens */ }
+
+        .roulette.spinning .item {
+            animation: motionBlur 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes motionBlur {
+            from { filter: blur(0); }
+            to { filter: blur(5px); }
+        }
+
+        .item {
+            width: 180px;
+            height: 160px;
+            margin: 0 5px;
+            background-color: #222;
+            border: 3px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 5px;
+        }
+        
+        .item:hover {
+            transform: scale(1.05);
+        }
+
+        .item img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+
+        .item .name {
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            color: #ccc;
+        }
+        
+        .item.winning {
+            animation: glow 1.5s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 10px 5px var(--item-color-start); }
+            to { box-shadow: 0 0 20px 10px var(--item-color-end); }
+        }
+
+        .rarity-1, .rarity-2, .rarity-3 {
+            border-color: #4b69ff;
+            box-shadow: 0 0 15px rgba(75, 105, 255, 0.5);
+        }
+
+        .rarity-4 {
+            border-color: #b503b8;
+            box-shadow: 0 0 15px rgba(181, 3, 184, 0.5);
+        }
+
+        .rarity-5 {
+            border-color: #ffc200;
+            box-shadow: 0 0 15px rgba(255, 194, 0, 0.5);
+        }
+
+        .rarity-6 {
+            border-image-source: linear-gradient(45deg, red, rgb(116, 22, 22), rgb(0, 0, 0), rgb(128, 0, 0), rgb(151, 40, 40), rgb(75, 1, 1), rgb(15, 1, 15));
+            border-image-slice: 1;
+            box-shadow: 0 0 20px rgba(133, 1, 1, 0.8);
+        }
+
+        .button-ultimate {
+    /* Estilo base aprimorado */
+    background: linear-gradient(145deg, #ff1a1a, #e60000);
+    color: #fff;
+    border: none;
+    padding: 20px 45px;
+    font-size: 1.3em;
+    font-weight: 800;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);  
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    
+    /* Efeitos de texto */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    
+    /* Borda sutil */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Efeito hover espetacular */
+.button-ultimate:hover:not(:disabled) {
+    background: linear-gradient(145deg, #ff3333, #ff0000);
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3), 
+                0 6px 6px rgba(255, 0, 0, 0.2);
+    transform: translateY(-2px);
+    letter-spacing: 2px;
+}
+
+/* Efeito de clique satisfatório */
+.button-ultimate:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
+    transition: all 0.1s ease;
+}
+
+/* Estado desabilitado elegante */
+.button-ultimate:disabled {
+    background: linear-gradient(145deg, #555, #333);
+    color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* Efeito de brilho sutil */
+.button-ultimate::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(30deg);
+    transition: all 0.7s ease;
+}
+
+.button-ultimate:hover::after {
+    left: 100%;
+}
+
+/* Efeito de pulso para atenção */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 50, 50, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 50, 50, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 50, 50, 0); }
+}
+
+.button-ultimate.pulse-effect {
+    animation: pulse 1.5s infinite;
+}
+
+/* Versão alternativa para sucesso */
+.button-ultimate.success {
+    background: linear-gradient(145deg, #4CAF50, #2E7D32);
+}
+
+.button-ultimate.success:hover:not(:disabled) {
+    background: linear-gradient(145deg, #66BB6A, #388E3C);
+    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3), 
+                0 6px 6px rgba(76, 175, 80, 0.2);
+}
+
+        /* Este container continua no DOM, mas não será mais usado para o anúncio */
+        .result-container { display:none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ======== MODAL CHAMATIVA ======== */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            background: rgba(0,0,0,0.85);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .35s ease, visibility .35s ease;
+            z-index: 9999;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-dialog {
+            position: relative;
+            width: min(520px, 90vw);
+            padding: 28px 24px 18px;
+            border-radius: 18px;
+            background: rgba(15,15,15,0.9);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 0 120px rgba(255, 0, 0, 0.15);
+            transform: scale(0.85);
+            animation: modalIn .35s ease forwards;
+            overflow: hidden;
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        .celebration {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            display: grid;
+            place-items: center;
+            overflow: visible;
+        }
+
+        /* Brilho giratório atrás do item */
+        .glow-circle {
+            position: absolute;
+            width: 420px; height: 420px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #bb0808, #6c0033, #3e0000, #981818, #511212
+            );
+            filter: blur(28px) saturate(1.2);
+            opacity: 0.85;
+            animation: spin 6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Anel pulsante */
+        .pulse-ring {
+            position: absolute;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.867);
+            animation: pulse 2.2s ease-out infinite;
+        }
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.65); }
+            70%  { box-shadow: 0 0 0 35px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        /* Imagem do item */
+        #rewardImage {
+            position: relative;
+            width: 220px; height: 220px;
+            object-fit: contain;
+            z-index: 3;
+            filter: drop-shadow(0 10px 22px rgba(0,0,0,0.85));
+            animation: popIn .45s ease both;
+            margin-top: 65px;
+        }
+        @keyframes popIn {
+            from { transform: scale(.6); opacity: 0; }
+            to   { transform: scale(1);  opacity: 1; }
+        }
+
+        /* Texto do item */
+        .reward-text {
+            position: relative;
+            margin-top: 6px;
+            font-size: 1.1rem;
+            text-align: center;
+            z-index: 3;
+            opacity: .95;
+        }
+        .reward-title {
+            font-size: 30px;
+            margin: 8px 0 4px;
+        }
+
+        /* Botão fechar */
+        .close-btn {
+            margin-top: 14px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(90deg, #ff0000, #ff0026);
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            transition: transform .12s ease, filter .12s ease;
+        }
+        .close-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+        /* Partículas (confetes) */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .particle {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: var(--sz, 8px); height: var(--sz, 8px);
+            background: var(--col, #ff0000);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: burst var(--dur, 1s) ease-out forwards;
+        }
+        @keyframes burst {
+            0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.7) rotate(0deg); }
+            80%  { opacity: 1; }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--rot, 180deg)); }
+        }
+    </style>
+</head>
+  <h1>ABERTURA DE CAIXA</h1>
+<body>
+
+  
+
+    <div class="roulette-container">
+        <div class="center-arrow"></div>
+        <div class="roulette" id="roulette"></div>
+    </div>
+    
+    <button class="button-ultimate"  id="spinButton">GIRAR ROLETA</button>
+    
+    <!-- Mantido no DOM, porém não usado mais para exibir o resultado -->
+    <div class="result-container" id="result-container"></div>
+
+    <!-- ======== MODAL ======== -->
+    <div class="modal" id="rewardModal" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+            <div class="celebration">
+                <div class="glow-circle"></div>
+                <div class="pulse-ring"></div>
+                <div class="particles" id="particles"></div>
+                <img id="rewardImage" alt="Item recebido">
+                <div class="reward-text">
+                    <div class="reward-title" id="rewardTitle">🎉 Parabéns! Você ganhou! 🎉</div>
+                    <div id="rewardSubtitle"></div>
+                </div>
+            </div>
+            <button class="close-btn" id="closeModalBtn">OK</button>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="roleta.js"></script>
+</body>
+</html>

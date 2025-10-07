@@ -1,7 +1,5 @@
 $(document).ready(function () {
     // Configuração do AJAX para incluir o token CSRF (se necessário)
-    // Se você estiver usando Laravel ou um framework similar, este meta tag precisa estar no seu HTML:
-    // <meta name="csrf-token" content="{{ csrf_token() }}">
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -13,15 +11,16 @@ $(document).ready(function () {
         e.preventDefault();
 
         // Limpa mensagens anteriores
-        $('.form-group').removeClass('error');
+        $('.input-group').removeClass('error');
         $('.error-message').hide();
         $('#successMessage').hide();
 
         // Obtém os valores dos campos
         const name = $('#name').val().trim();
+        const username = $('#username').val().trim(); // Novo campo
         const email = $('#email').val().trim();
         const password = $('#password').val().trim();
-        const confirmPassword = $('#confirmPassword').val().trim(); // Novo campo
+        const confirmPassword = $('#confirmPassword').val().trim();
 
         // Validação client-side
         let isValid = true;
@@ -32,22 +31,33 @@ $(document).ready(function () {
             isValid = false;
         }
 
+        // Validação do username
+        if (!username) {
+            $('#usernameGroup').addClass('error');
+            $('#usernameError').text('Por favor, insira um username').show();
+            isValid = false;
+        } else if (username.length < 3) {
+            $('#usernameGroup').addClass('error');
+            $('#usernameError').text('O username deve ter pelo menos 3 caracteres').show();
+            isValid = false;
+        } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            $('#usernameGroup').addClass('error');
+            $('#usernameError').text('O username só pode conter letras, números e underline').show();
+            isValid = false;
+        }
+
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             $('#emailGroup').addClass('error');
             $('#emailError').text('Por favor, insira um e-mail válido').show();
             isValid = false;
         }
 
-        // A API pede mínimo 6 caracteres, mas seu HTML está com 8.
-        // Vou manter a validação do JS em 8 para consistência com o HTML.
-        // Adapte para 6 se a API for a regra final.
         if (!password || password.length < 8) {
             $('#passwordGroup').addClass('error');
             $('#passwordError').text('A senha deve ter pelo menos 8 caracteres').show();
             isValid = false;
         }
 
-        // Validação da confirmação de senha
         if (!confirmPassword || confirmPassword !== password) {
             $('#confirmPasswordGroup').addClass('error');
             $('#confirmPasswordError').text('As senhas não coincidem').show();
@@ -63,34 +73,34 @@ $(document).ready(function () {
 
         // Requisição AJAX para a API
         $.ajax({
-            url: 'http://localhost:8000/api/registrar', // Endpoint da sua API
+            url: 'http://localhost:8000/api/registrar',
             method: 'POST',
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({
                 name: name,
+                username: username, // Novo campo
                 email: email,
                 password: password,
-                password_confirmation: confirmPassword // Campo exigido pela API para confirmação
+                password_confirmation: confirmPassword
             }),
             success: function (response) {
                 // Restaura o botão
                 submitBtn.text(originalBtnText).prop('disabled', false);
 
-                if (response.message === "Sucesso" || response.message === "Usuário registrado com sucesso") { // Adapte a mensagem de sucesso da sua API
+                if (response.message === "Sucesso" || response.message === "Usuário registrado com sucesso") {
                     $('#successMessage')
                         .text('Cadastro realizado com sucesso! Redirecionando para login...')
                         .css('display', 'block');
 
                     // Limpa o formulário
-                    $('#registerForm')[0].reset(); // Limpa o formulário com o novo ID
+                    $('#registerForm')[0].reset();
 
                     // Redireciona para a página de login após 2 segundos
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 2000);
                 } else {
-                    // Se a API retornar uma mensagem diferente de "Sucesso" mas sem erros, exiba-a
                     alert('Resposta inesperada da API: ' + (response.message || 'Erro desconhecido'));
                 }
             },
@@ -106,43 +116,41 @@ $(document).ready(function () {
                         $('#nameError').text(response.errors.name[0]).show();
                         $('#nameGroup').addClass('error');
                     }
+                    if (response.errors.username) {
+                        $('#usernameError').text(response.errors.username[0]).show();
+                        $('#usernameGroup').addClass('error');
+                    }
                     if (response.errors.email) {
                         $('#emailError').text(response.errors.email[0]).show();
                         $('#emailGroup').addClass('error');
                     }
                     if (response.errors.password) {
-                        // A API pode retornar múltiplos erros para a senha (ex: tamanho, complexidade)
-                        // Exiba o primeiro erro ou concatene se preferir
                         $('#passwordError').text(response.errors.password[0]).show();
                         $('#passwordGroup').addClass('error');
                     }
-                    // Adicionar tratamento para password_confirmation do servidor
                     if (response.errors.password_confirmation) {
                         $('#confirmPasswordError').text(response.errors.password_confirmation[0]).show();
                         $('#confirmPasswordGroup').addClass('error');
                     }
                 } else {
-                    // Exibe a mensagem de erro geral ou a do xhr, se disponível
                     alert(response?.message || 'Erro ao cadastrar. Por favor, tente novamente.');
                 }
             }
         });
     });
 
-    // Botões mostrar/ocultar senha para AMBOS os campos de senha
-    // O seletor foi corrigido para '.toggle-password' e a lógica para encontrar o input é mais robusta
+    // Botões mostrar/ocultar senha
     $('.toggle-password').on('click', function () {
-        const passwordInput = $(this).closest('.password-container').find('input[type="password"], input[type="text"]');
-        const icon = $(this).find('i');
+        const passwordInput = $(this).siblings('input');
         const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
-
+        
         passwordInput.attr('type', type);
-
+        
         // Altera o ícone
         if (type === 'password') {
-            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
         } else {
-            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
         }
     });
 
@@ -151,6 +159,26 @@ $(document).ready(function () {
         if ($(this).val().trim()) {
             $('#nameGroup').removeClass('error');
             $('#nameError').hide();
+        }
+    });
+
+    // Validação em tempo real para o campo Username
+    $('#username').on('input', function() {
+        const username = $(this).val().trim();
+        
+        if (username.length >= 3 && /^[a-zA-Z0-9_]+$/.test(username)) {
+            $('#usernameGroup').removeClass('error');
+            $('#usernameError').hide();
+        } else if (username.length > 0) {
+            $('#usernameGroup').addClass('error');
+            if (username.length < 3) {
+                $('#usernameError').text('O username deve ter pelo menos 3 caracteres').show();
+            } else {
+                $('#usernameError').text('O username só pode conter letras, números e underline').show();
+            }
+        } else {
+            $('#usernameGroup').removeClass('error');
+            $('#usernameError').hide();
         }
     });
 
@@ -168,13 +196,13 @@ $(document).ready(function () {
 
     // Validação em tempo real para o campo Senha
     $('#password').on('input', function() {
-        if ($(this).val().length >= 8) { // Mantenho 8, conforme HTML
+        if ($(this).val().length >= 8) {
             $('#passwordGroup').removeClass('error');
             $('#passwordError').hide();
-        } else if ($(this).val().length > 0) { // Mostra erro se digitou algo mas não alcançou o mínimo
+        } else if ($(this).val().length > 0) {
             $('#passwordGroup').addClass('error');
             $('#passwordError').text('A senha deve ter pelo menos 8 caracteres').show();
-        } else { // Se o campo estiver vazio
+        } else {
             $('#passwordGroup').removeClass('error');
             $('#passwordError').hide();
         }

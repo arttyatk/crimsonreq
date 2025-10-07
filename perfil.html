@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --vermelho-escuro: #800000;
+            --vermelho-medio: #B22222;
+            --vermelho: #DC143C;
+            --vermelho-vibrante: #FF0033;
+            --vermelho-claro: #FF6B6B;
+            --vermelho-palido: #FFE5E5;
+            --branco: #FFFFFF;
+            --cinza-escuro: #222222;
+            --cinza: #444444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            background: url(eclip.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-size: 150%;
+            color: var(--branco);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--cinza-escuro);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+           
+        }
+        
+        /* Header */
+        .profile-header {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(to right, var(--vermelho-escuro), var(--vermelho-vibrante));
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 20px;
+        }
+        
+        .cover-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+        
+        .profile-image-container {
+            position: absolute;
+            bottom: -70px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--cinza-escuro);
+            background: var(--cinza-escuro);
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .change-photo {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--vermelho-vibrante);
+            color: var(--branco);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .change-photo:hover {
+            background: var(--vermelho-medio);
+            transform: scale(1.05);
+        }
+        
+        /* Conteúdo Principal */
+        .profile-content {
+            padding: 80px 40px 40px;
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--branco);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .profile-bio {
+            text-align: center;
+            color: var(--vermelho-palido);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--vermelho);
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        
+        .tab {
+            padding: 1rem 1.8rem;
+            cursor: pointer;
+            position: relative;
+            font-weight: 600;
+            color: var(--vermelho-claro);
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: var(--branco);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--vermelho-vibrante);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .tab:hover {
+            color: var(--branco);
+        }
+        
+        /* Formulário */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--vermelho-claro);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--vermelho-escuro);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--cinza);
+            color: var(--branco);
+        }
+        
+        .form-control:focus {
+            border-color: var(--vermelho-vibrante);
+            box-shadow: 0 0 0 3px rgba(255, 0, 51, 0.3);
+            outline: none;
+        }
+        
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--vermelho-claro);
+            margin-top: 0.4rem;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Botões */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--vermelho);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--vermelho-vibrante);
+            color: var(--branco);
+        }
+        
+        .btn-primary:hover {
+            background: var(--vermelho-medio);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 51, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--vermelho);
+            color: var(--vermelho-claro);
+        }
+        
+        .btn-outline:hover {
+            background: var(--vermelho);
+            color: var(--branco);
+        }
+        
+        /* Interests */
+        .interests-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .interest-tag {
+            background: var(--vermelho-escuro);
+            color: var(--vermelho-claro);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--vermelho);
+        }
+        
+        .interest-tag:hover {
+            background: var(--vermelho);
+            color: var(--branco);
+        }
+        
+        .interest-tag.selected {
+            background: var(--vermelho-vibrante);
+            color: var(--branco);
+            border-color: var(--vermelho-vibrante);
+        }
+        
+        /* Social Links */
+        .social-input {
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-prefix {
+            background: var(--vermelho);
+            padding: 14px 15px;
+            border: 1px solid var(--vermelho);
+            border-right: none;
+            border-radius: 10px 0 0 8px;
+            color: var(--branco);
+            font-weight: 500;
+        }
+        
+        .social-input .form-control {
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--cinza);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--branco);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--vermelho-vibrante);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                height: 160px;
+            }
+            
+            .profile-image-container {
+                width: 120px;
+                height: 120px;
+                bottom: -50px;
+            }
+            
+            .profile-content {
+                padding: 60px 20px 30px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .profile-name {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tabs {
+                justify-content: flex-start;
+            }
+            
+            .tab {
+                padding: 1rem 1.2rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="profile-header">
+            <img src="rio vermelho.jpg" alt="Capa" class="cover-photo">
+            
+            <div class="profile-image-container">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80" alt="Perfil" class="profile-image">
+                <div class="change-photo">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Principal -->
+        <div class="profile-content">
+            <h1 class="profile-name">Carolina Mendonça</h1>
+            <p class="profile-bio">Fanática por mangás, apaixonada por jogos e sempre disposta a fazer novas amizades</p>
+            
+            <!-- Abas -->
+            <div class="tabs"> 
+                <div class="tab active" data-tab="info">Informações</div>
+                <div class="tab" data-tab="social">Redes Sociais</div>
+                <div class="tab" data-tab="preferences">Inventário</div>
+            </div>
+            
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content active" id="info">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Nome Completo</label>
+                            <input type="text" id="name" class="form-control" value="Carolina Mendonça">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="username">Nome de Usuário</label>
+                            <input type="text" id="username" class="form-control" value="@carolmd">
+                            <div class="form-text">Seu identificador único na plataforma</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" class="form-control" value="carol.mendonca@exemplo.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone" class="form-control" value="(11) 98765-4321">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="birthdate">Data de Nascimento</label>
+                            <input type="date" id="birthdate" class="form-control" value="1992-08-15">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Localização</label>
+                            <input type="text" id="location" class="form-control" value="São Paulo, Brasil">
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="bio">Biografia</label>
+                            <textarea id="bio" class="form-control" rows="4">Designer e desenvolvedora front-end, apaixonada por jogos eletrônicos. Amante de fotografia, viagens, mangá e muito café.</textarea>
+                            <div class="form-text">Conte um pouco sobre você</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="social">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="website">Discord</label>
+                            <input type="url" id="website" class="form-control" value="https://discord.com/carolmd">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="twitter">Twitter</label>
+                            <div class="social-input">
+                                <span class="social-prefix">@</span>
+                                <input type="text" id="twitter" class="form-control" value="carolmd">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="instagram">Instagram</label>
+                            <div class="social-input">
+                                <span class="social-prefix">@</span>
+                                <input type="text" id="instagram" class="form-control" value="carol.mendonca">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="linkedin">Tiktok</label>
+                            <div class="social-input">
+                                <span class="social-prefix">@</span>
+                                <input type="text" id="linkedin" class="form-control" value="carolinamendonca">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="github">Snapchat</label>
+                            <div class="social-input">
+                                <span class="social-prefix">@</span>
+                                <input type="text" id="github" class="form-control" value="carolmd">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Banner/Box - Sistema Gacha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c0e0e 0%, #1a0a0a 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #cc4444;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(204, 68, 68, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 257px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            background-image: url('CRIMSON LOGO TRANSPARENTE.png'); /* Substitua pelo caminho da sua imagem */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: block;
+            border-radius: 50%;
+            border: 2px solid #cc4444;
+            box-shadow: 0 0 8px rgba(204, 68, 68, 0.7);
+        }
+
+        .subtitle {
+            color: #e6b0b0;
+            font-size: 1.2rem;
+        }
+
+        .admin-panel {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            background-color: rgba(30, 10, 10, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar {
+            background-color: rgba(20, 5, 5, 0.9);
+            padding: 25px;
+        }
+
+        .nav-title {
+            color: #cc4444;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #cc4444;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 15px;
+        }
+
+        .nav-links a {
+            color: #e6b0b0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: #cc4444;
+            color: #fff;
+        }
+
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            color: #cc4444;
+            font-size: 1.8rem;
+        }
+
+        .form-container {
+            background-color: rgba(40, 15, 15, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            color: #cc4444;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #cc4444;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e6b0b0;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(30, 10, 10, 0.7);
+            border: 1px solid #662222;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #cc4444;
+            box-shadow: 0 0 0 2px rgba(204, 68, 68, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #cc4444;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d86a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(204, 68, 68, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #443333;
+            color: #e6b0b0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #554444;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #996666;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            .admin-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-img"></div> Crimson Start Admin
+            </div>
+            <div class="subtitle">Painel de Controle para Gerenciamento de Cadastros</div>
+        </header>
+
+        <div class="admin-panel">
+            <div class="sidebar">
+                <h3 class="nav-title">Navegação</h3>
+                <ul class="nav-links">
+                    <li><a href="inicial.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="cadastro.html"><i class="fas fa-plus-circle"></i> Cadastrar Personagem/Item</a></li>
+                    <li><a href="gcadastro.html" class="active"><i class="fas fa-plus-circle"></i> Cadastrar Banner/Box</a></li>
+                    <li><a href="lista.html"><i class="fas fa-list"></i> Lista de Cadastros</a></li>
+                    <li><a href="banns.html"><i class="fas fa-images"></i> Gerenciar Banners</a></li>
+                    <li><a href="exclusivo.html"><i class="fas fa-star"></i> Atribuir Banner</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <div class="content-header">
+                    <h2 class="page-title">Cadastrar Novo Banner/Box</h2>
+                </div>
+
+                <div class="form-container">
+                    <h3 class="form-title">Informações do Banner</h3>
+                    <form id="banner-form" enctype="multipart/form-data">
+                        <div class="form-grid">
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label for="nome">Nome do Banner</label>
+                                <input type="text" id="nome" name="nome" class="form-control" placeholder="Ex: Banner de Lançamento" required>
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label for="imagem">Imagem do Banner</label>
+                                <input type="file" id="imagem" name="imagem" class="form-control" accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status" name="status" class="form-control">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="descricao">Descrição do Banner</label>
+                                <textarea id="descricao" name="descricao" class="form-control"></textarea>
+                            </div>
+                            
+                            <input type="hidden" name="preco" value="0.00">
+                            <input type="hidden" name="tipo" value="banner">
+                            <input type="hidden" name="itens_ids" value="">
+                            
+                        </div>
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-secondary">Limpar</button>
+                            <button type="submit" class="btn btn-primary">Cadastrar Banner</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Crinsom Star &copy; 2025 - Todos os direitos reservados</p>
+        </footer>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="gcadastro.js"></script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Banner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Mantenha seus estilos CSS aqui */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: url('clipsee.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .manage-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(40, 0, 0, 0.85);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.7);
+            border: 1px solid #800000;
+            position: relative;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2em;
+            color: #ffcccc;
+            border-bottom: 2px solid #800000;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .banner-preview {
+            width: 100%;
+            min-height: 450px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 2px dashed #a00000;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .upload-area {
+            text-align: center;
+            font-size: 1.2em;
+            color: #ff9999;
+            padding: 20px;
+        }
+
+        .upload-area i {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ffb3b3;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #a00000;
+            background-color: rgba(60, 0, 0, 0.8);
+            color: #ffcccc;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff6666;
+            box-shadow: 0 0 5px rgba(255, 102, 102, 0.5);
+        }
+
+        .form-group input[type="file"] {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"]::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+
+        .form-group input[type="file"]::before {
+            content: 'Escolher arquivo';
+            display: inline-block;
+            background: linear-gradient(to bottom, #d10000, #a00000);
+            color: white;
+            border-radius: 5px;
+            padding: 8px 15px;
+            outline: none;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .form-group input[type="file"]:hover::before {
+            background: linear-gradient(to bottom, #e10000, #b00000);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #1b5e20;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to bottom, #66bb6a, #388e3c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #1b5e20;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to bottom, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #b71c1c;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(to bottom, #ef5350, #e53935);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="manage-container">
+        <h2 class="header">Gerenciar Banner Atual</h2>
+        
+        <div class="banner-preview" id="banner-preview">
+            <div class="upload-area" id="upload-placeholder" style="display: none;">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <p>Arraste e solte uma imagem aqui ou escolha um arquivo</p>
+            </div>
+            <img id="banner-image-preview" src="" alt="Pré-visualização do Banner" style="display: none;">
+        </div>
+
+        <form id="edit-banner-form">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="imagem">Imagem do Banner</label>
+                    <input type="file" id="imagem" name="imagem" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="nome">Título do Banner</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="descricao">Descrição do Banner</label>
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="preco">Preço</label>
+                    <input type="number" id="preco" name="preco" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" name="tipo" required>
+                        <option value="banner">Banner</option>
+                        <option value="box">Box</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itens_ids">IDs dos Itens (separados por vírgula)</label>
+                    <input type="text" id="itens_ids" name="itens_ids">
+                </div>
+            </div>
+        </form>
+
+        <div class="action-buttons">
+            <button class="btn btn-danger" id="delete-btn">Excluir Banner</button>
+            <button class="btn btn-primary" id="save-btn">Salvar Alterações</button>
+        </div>
+    </div>
+
+    <script>
+    const API_URL = 'http://127.0.0.1:8000/api/banners-boxes';
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const bannerId = urlParams.get('id');
+
+    const bannerImageInput = document.getElementById('imagem');
+    const bannerImagePreview = document.getElementById('banner-image-preview');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    
+    // ------------------------------------
+    // 1. CARREGAR DADOS DO BANNER
+    // ------------------------------------
+    function loadBannerData(id) {
+        $.ajax({
+            url: `${API_URL}/${id}`,
+            type: 'GET',
+            success: function(response) { 
+                const banner = response.banner; 
+
+                if (!banner) {
+                    alert('Erro: Banner não encontrado na resposta da API.');
+                    window.location.href = 'banns.html';
+                    return;
+                }
+
+                $('#nome').val(banner.nome);
+                $('#descricao').val(banner.descricao);
+                // Garante que o formato do preço é compatível com input type="number"
+                $('#preco').val(parseFloat(banner.preco || 0).toFixed(2));
+                $('#tipo').val(banner.tipo);
+                $('#status').val(banner.status);
+                $('#itens_ids').val(banner.itens_ids || '');
+                
+                if (banner.imagem_url) {
+                    bannerImagePreview.src = banner.imagem_url;
+                    bannerImagePreview.style.display = 'block';
+                    uploadPlaceholder.style.display = 'none';
+                } else {
+                    uploadPlaceholder.style.display = 'block';
+                    bannerImagePreview.style.display = 'none';
+                }
+            },
+            error: function(xhr) {
+                alert('Erro ao carregar dados do banner: ' + xhr.responseText);
+                window.location.href = 'banns.html';
+            }
+        });
+    }
+    
+    // ------------------------------------
+    // 2. ATUALIZAR BANNER (ENVIO DE FORMULARIO)
+    // ------------------------------------
+    function updateBanner(id, formData) {
+        // ESSENCIAL: Adicionando o método PUT para simulação no Laravel (POST + _method=PUT)
+        formData.append('_method', 'PUT'); 
+
+        $.ajax({
+            url: `${API_URL}/${id}`,
+            type: 'POST', // Deve ser POST para enviar FormData com _method
+            data: formData,
+            processData: false, // Necessário ao enviar FormData
+            contentType: false, // Necessário ao enviar FormData
+            success: function(response) {
+                alert('Banner atualizado com sucesso!');
+                window.location.href = 'banns.html';
+            },
+            error: function(xhr) {
+                let errorMessage = 'Erro ao atualizar. Tente novamente.';
+                
+                // Tenta parsear JSON para uma mensagem de erro mais útil
+                try {
+                    const errorResponse = JSON.parse(xhr.responseText);
+                    
+                    // Se for 422 (erro de validação do Laravel)
+                    if (xhr.status === 422 && errorResponse.errors) {
+                        // Concatena todas as mensagens de erro de validação
+                        const validationErrors = Object.values(errorResponse.errors).flat().join('; ');
+                        errorMessage = 'Erro de validação: ' + validationErrors;
+                    } else {
+                        // Exibe a mensagem de erro da API ou erro de status
+                        errorMessage = errorResponse.message || 'Erro no servidor: HTTP ' + xhr.status;
+                    }
+                } catch (e) {
+                    errorMessage = 'Erro desconhecido do servidor: HTTP ' + xhr.status;
+                }
+                
+                // Exibe o erro detalhado
+                alert('Atenção: ' + errorMessage);
+            }
+        });
+    }
+    
+    // ------------------------------------
+    // 3. PRÉ-VISUALIZAÇÃO DE IMAGEM
+    // ------------------------------------
+    bannerImageInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                bannerImagePreview.src = e.target.result;
+                bannerImagePreview.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // ------------------------------------
+    // 4. DRAG AND DROP
+    // ------------------------------------
+    const bannerPreviewArea = document.getElementById('banner-preview');
+    bannerPreviewArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        bannerPreviewArea.style.borderColor = '#ff6666';
+    });
+
+    bannerPreviewArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        bannerPreviewArea.style.borderColor = '#a00000';
+    });
+
+    bannerPreviewArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        bannerPreviewArea.style.borderColor = '#a00000';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            // Atribui os arquivos ao input
+            bannerImageInput.files = files;
+            // Dispara o evento 'change' para ativar a pré-visualização
+            const changeEvent = new Event('change');
+            bannerImageInput.dispatchEvent(changeEvent);
+        }
+    });
+
+    // ------------------------------------
+    // 5. LISTENERS DE BOTÕES
+    // ------------------------------------
+    
+    // Evento do botão Salvar
+    document.getElementById('save-btn').addEventListener('click', () => {
+        const formData = new FormData();
+        
+        // Adiciona todos os campos do formulário (incluindo o preço)
+        formData.append('nome', $('#nome').val());
+        formData.append('descricao', $('#descricao').val());
+        formData.append('preco', $('#preco').val()); // O Laravel irá validar se é um número
+        formData.append('tipo', $('#tipo').val());
+        formData.append('status', $('#status').val());
+        formData.append('itens_ids', $('#itens_ids').val());
+        
+        // Adiciona o arquivo de imagem APENAS se um novo foi selecionado
+        if (bannerImageInput.files.length > 0) {
+            formData.append('imagem', bannerImageInput.files[0]);
+        }
+        
+        updateBanner(bannerId, formData);
+    });
+
+    // Evento do botão Excluir
+    document.getElementById('delete-btn').addEventListener('click', () => {
+        if (confirm('Tem certeza que deseja excluir este banner? Esta ação não pode ser desfeita.')) {
+            $.ajax({
+                url: `${API_URL}/${bannerId}`,
+                type: 'DELETE',
+                success: function(response) {
+                    alert(response.message || 'Banner excluído com sucesso!');
+                    window.location.href = 'banns.html';
+                },
+                error: function(xhr) {
+                    alert('Erro ao excluir: ' + xhr.responseText);
+                }
+            });
+        }
+    });
+    
+    // ------------------------------------
+    // 6. INICIALIZAÇÃO
+    // ------------------------------------
+    $(document).ready(function() {
+        if (bannerId) {
+            loadBannerData(bannerId);
+        } else {
+            alert('ID do banner não encontrado.');
+            window.location.href = 'banns.html';
+        }
+    });
+</script>
+</body>
+</html>

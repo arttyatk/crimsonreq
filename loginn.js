@@ -180,12 +180,10 @@ $(document).ready(function () {
     `)
     .appendTo('head');
 
-  // O resto do código permanece exatamente igual...
   // ==============================================
   // Funções de exibição de notificações
   // ==============================================
   
-  // Função para mostrar alerta centralizado (erros/verificações)
   function showCenterAlert(message, isError = true) {
     const alert = $('#centerAlert');
     $('.alert-message', alert).text(message);
@@ -197,7 +195,6 @@ $(document).ready(function () {
     }, 3000);
   }
 
-  // Função para mostrar animação de sucesso
   function showSuccessAnimation(message) {
     const animation = $('#successAnimation');
     $('.success-message', animation).text(message);
@@ -206,7 +203,21 @@ $(document).ready(function () {
     
     setTimeout(() => {
       animation.removeClass('show');
-    }, 2500); // Tempo total da animação + mensagem
+    }, 2500);
+  }
+
+  // ==============================================
+  // Lógica da função do cookie
+  // ==============================================
+  function getCookie(nome) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const c = cookies[i].trim();
+        if (c.indexOf(nome + "=") === 0) {
+            return c.substring((nome + "=").length, c.length);
+        }
+    }
+    return null;
   }
 
   // ==============================================
@@ -238,7 +249,7 @@ $(document).ready(function () {
       return;
     }
 
-    // Simulação de verificação de e-mail (substitua por sua lógica real)
+    // Validação de formato de e-mail
     if (!email.includes('@')) {
       showCenterAlert('Por favor, verifique seu e-mail. Formato inválido.');
       $('#emailGroup').addClass('error');
@@ -256,12 +267,18 @@ $(document).ready(function () {
         if (response.acess_token) {
           showSuccessAnimation('Login realizado com sucesso!');
           
-          // Armazena o token no localStorage
-          localStorage.setItem('jwt', response.acess_token);
+          // Salva o token e o ID do usuário em cookies, conforme o retorno da sua API
+          document.cookie = "token=" + response.acess_token + "; path=/; max-age=3600";
+          document.cookie = "user_id=" + response.user.id + "; path=/; max-age=3600";
 
-          // Redirecionar após a animação
+          // Exibe no console para confirmação
+          console.log("Resposta da API:", response);
+          console.log("Token recebido e salvo: ", response.acess_token);
+          console.log("ID do usuário recebido e salvo: ", response.user.id);
+
+          // Redireciona após a animação
           setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = 'inicial.html';
           }, 2500);
         } else {
           showCenterAlert('Resposta inesperada da API.');

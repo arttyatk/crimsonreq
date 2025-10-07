@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Banners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* (Seu CSS aqui, ele já está perfeito) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: url('fundobans.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            z-index: -1;
+        }
+
+        .manage-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: rgba(40, 0, 0, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.7);
+            border: 1px solid #800000;
+            padding: 30px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ffcccc;
+            border-bottom: 2px solid #800000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .banner-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .banner-card {
+            background-color: rgba(60, 0, 0, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #a00000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .banner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(200, 0, 0, 0.5);
+        }
+
+        .banner-image-container {
+            width: 100%;
+            height: 180px;
+            background-color: #2a0f0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #773333;
+            font-size: 3rem;
+            border-bottom: 1px solid #a00000;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .banner-info {
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .banner-info h3 {
+            font-size: 1.5em;
+            color: #ffcccc;
+            margin-bottom: 5px;
+        }
+
+        .banner-info p {
+            font-size: 1em;
+            color: #ffb3b3;
+            margin-bottom: 15px;
+        }
+
+        .banner-actions {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 15px 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none; /* Para remover o sublinhado em links */
+            color: white;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+            box-shadow: 0 4px 0 #1b5e20;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(to bottom, #66bb6a, #388e3c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #1b5e20;
+        }
+
+        .btn-delete {
+            background: linear-gradient(to bottom, #f44336, #d32f2f);
+            box-shadow: 0 4px 0 #b71c1c;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(to bottom, #ef5350, #e53935);
+            transform: translateY(-2px);
+            box-shadow: 6px #c62828;
+        }
+
+        .btn-back {
+            background: linear-gradient(to bottom, #5d3f6a, #3a2542);
+            box-shadow: 0 4px 0 #281a2e;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(to bottom, #724c80, #4d3356);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #281a2e;
+        }
+
+        .btn-enter {
+        background: linear-gradient(to bottom, #ff9800, #f57c00);
+        box-shadow: 0 4px 0 #e65100;
+    }
+
+    .btn-enter:hover {
+        background: linear-gradient(to bottom, #ffa726, #fb8c00);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #e65100;
+    }
+    </style>
+</head>
+<body>
+    <div class="manage-container">
+        <a href="gcadastro.html" class="btn btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+        </a>
+        <h2 class="header">Gerenciar Banners de Eventos</h2>
+        <div class="banner-list" id="banner-list">
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api/banners-boxes';
+
+        // Função para renderizar os banners
+        function renderBanners(banners) {
+            const bannerList = $('#banner-list');
+            bannerList.empty();
+
+            banners.forEach(banner => {
+                const imageUrl = banner.imagem_url;
+                let imageContent;
+
+                if (imageUrl) {
+                    imageContent = `<img src="${imageUrl}" alt="${banner.nome}" class="banner-image">`;
+                } else {
+                    imageContent = `<i class="fa-solid fa-image"></i>`;
+                }
+                
+                const card = `
+                    <div class="banner-card">
+                        <div class="banner-image-container">
+                            ${imageContent}
+                        </div>
+                        <div class="banner-info">
+                            <h3>${banner.nome}</h3>
+                            <p>${banner.descricao || 'Sem descrição'}</p>
+                        </div>
+                        <div class="banner-actions">
+                            <button class="btn btn-edit" onclick="editBanner(${banner.id})">
+                                <i class="fa-solid fa-pen-to-square"></i> Editar
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteBanner(${banner.id})">
+                                <i class="fa-solid fa-trash-can"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
+                bannerList.append(card);
+            });
+        }
+        
+        function fetchBanners() {
+            $.ajax({
+                url: API_URL,
+                type: 'GET',
+                success: function(response) {
+                    renderBanners(response);
+                },
+                error: function(xhr) {
+                    alert('Erro ao carregar os banners: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function deleteBanner(id) {
+            if (confirm('Tem certeza que deseja excluir este banner?')) {
+                $.ajax({
+                    url: `${API_URL}/${id}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        alert(response.message);
+                        fetchBanners();
+                    },
+                    error: function(xhr) {
+                        alert('Erro ao excluir: ' + xhr.responseText);
+                    }
+                });
+            }
+        }
+        
+        function editBanner(id) {
+            window.location.href = `gbann.html?id=${id}`;
+        }
+        
+        $(document).ready(function() {
+            fetchBanners();
+        });
+
+        function renderBanners(banners) {
+        const bannerList = $('#banner-list');
+        bannerList.empty();
+
+        banners.forEach(banner => {
+            const imageUrl = banner.imagem_url;
+            let imageContent;
+
+            if (imageUrl) {
+                imageContent = `<img src="${imageUrl}" alt="${banner.nome}" class="banner-image">`;
+            } else {
+                imageContent = `<i class="fa-solid fa-image"></i>`;
+            }
+            
+            const card = `
+                <div class="banner-card">
+                    <div class="banner-image-container">
+                        ${imageContent}
+                    </div>
+                    <div class="banner-info">
+                        <h3>${banner.nome}</h3>
+                        <p>${banner.descricao || 'Sem descrição'}</p>
+                    </div>
+                    <div class="banner-actions">
+                        <button class="btn btn-edit" onclick="editBanner(${banner.id})">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteBanner(${banner.id})">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
+                        <button class="btn btn-enter" onclick="enterBanner(${banner.id})">
+                            <i class="fa-solid fa-play"></i> Entrar no Banner
+                        </button>
+                    </div>
+                </div>
+            `;
+            bannerList.append(card);
+        });
+    }
+
+    // Nova função para entrar no banner
+    function enterBanner(bannerId) {
+        // Redireciona para a roleta.html passando o id do banner via query string
+        window.location.href = `roleta.html?bannerId=${bannerId}`;
+    }
+    </script>
+</body>
+</html>
