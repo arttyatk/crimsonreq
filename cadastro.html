@@ -230,6 +230,292 @@
             font-size: 0.9rem;
         }
 
+        /* Alertas Animados - Tema Carmesim e Preto */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .alert-box {
+            background: linear-gradient(145deg, #1a0a0a 0%, #2c0e0e 50%, #1a0a0a 100%);
+            border: 3px solid;
+            border-image: linear-gradient(135deg, #dc143c, #b22222, #8b0000) 1;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 
+                0 20px 60px rgba(220, 20, 60, 0.3),
+                0 0 0 1px rgba(220, 20, 60, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: scale(0.7) rotateX(-90deg);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-overlay.show .alert-box {
+            transform: scale(1) rotateX(0deg);
+        }
+
+        .alert-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .alert-header {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            padding: 25px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .alert-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .alert-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 1px;
+        }
+
+        .alert-body {
+            padding: 30px;
+        }
+
+        .alert-message {
+            color: #e6b0b0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .alert-button {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 25px rgba(220, 20, 60, 0.4),
+                0 0 0 1px rgba(220, 20, 60, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .alert-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .alert-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(220, 20, 60, 0.6),
+                0 0 0 1px rgba(220, 20, 60, 0.3);
+        }
+
+        .alert-button:hover::before {
+            left: 100%;
+        }
+
+        .alert-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Variantes de alerta */
+        .alert-success .alert-header {
+            background: linear-gradient(135deg, #2ECC40 0%, #27ae60 100%);
+        }
+
+        .alert-success .alert-button {
+            background: linear-gradient(135deg, #2ECC40 0%, #27ae60 100%);
+            box-shadow: 
+                0 8px 25px rgba(46, 204, 64, 0.4),
+                0 0 0 1px rgba(46, 204, 64, 0.2);
+        }
+
+        .alert-error .alert-header {
+            background: linear-gradient(135deg, #FF4136 0%, #c0392b 100%);
+        }
+
+        .alert-error .alert-button {
+            background: linear-gradient(135deg, #FF4136 0%, #c0392b 100%);
+            box-shadow: 
+                0 8px 25px rgba(255, 65, 54, 0.4),
+                0 0 0 1px rgba(255, 65, 54, 0.2);
+        }
+
+        .alert-warning .alert-header {
+            background: linear-gradient(135deg, #FF851B 0%, #e67e22 100%);
+        }
+
+        .alert-warning .alert-button {
+            background: linear-gradient(135deg, #FF851B 0%, #e67e22 100%);
+            box-shadow: 
+                0 8px 25px rgba(255, 133, 27, 0.4),
+                0 0 0 1px rgba(255, 133, 27, 0.2);
+        }
+
+        /* Loading Spinner Atualizado */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+            background: linear-gradient(145deg, #1a0a0a 0%, #2c0e0e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #dc143c;
+            box-shadow: 
+                0 20px 60px rgba(220, 20, 60, 0.3),
+                0 0 0 1px rgba(220, 20, 60, 0.1);
+        }
+
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 3px solid rgba(220, 20, 60, 0.3);
+            border-top: 3px solid #dc143c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 3px solid transparent;
+            border-top: 3px solid #b22222;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #e6b0b0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Efeitos de partículas para o alerta */
+        .alert-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #dc143c;
+            border-radius: 50%;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { transform: translateY(-20px) scale(1.5); opacity: 1; }
+        }
+
         @media (max-width: 900px) {
             .admin-panel {
                 grid-template-columns: 1fr;
@@ -334,5 +620,28 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="cadastro.js"></script>
+
+    <!-- Sistema de Alertas Animados -->
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-box">
+            <div class="alert-particles" id="alertParticles"></div>
+            <div class="alert-header">
+                <div class="alert-icon"></div>
+                <h3 class="alert-title"></h3>
+            </div>
+            <div class="alert-body">
+                <p class="alert-message"></p>
+                <button class="alert-button">CONTINUAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processando...</div>
+        </div>
+    </div>
 </body>
 </html>

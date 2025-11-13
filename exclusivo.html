@@ -226,6 +226,431 @@
             font-size: 0.9rem;
         }
 
+        /* Alertas Épicos - Sistema de Exclusividade */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .alert-container {
+            background: linear-gradient(145deg, #1a0a0a 0%, #2c0e0e 50%, #1a0a0a 100%);
+            border: 4px solid;
+            border-image: linear-gradient(135deg, #dc143c, #ff6b6b, #dc143c) 1;
+            border-radius: 25px;
+            padding: 0;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 
+                0 30px 100px rgba(220, 20, 60, 0.5),
+                0 0 0 1px rgba(220, 20, 60, 0.3),
+                inset 0 0 100px rgba(220, 20, 60, 0.1);
+            transform: scale(0.5) rotateY(90deg);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .alert-overlay.show .alert-container {
+            transform: scale(1) rotateY(0deg);
+            opacity: 1;
+        }
+
+        /* Efeito de brilho pulsante na borda */
+        .alert-container::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(45deg, #dc143c, #ff6b6b, #b22222, #dc143c);
+            background-size: 400% 400%;
+            border-radius: 29px;
+            z-index: -1;
+            animation: borderPulse 3s ease infinite, glow 2s ease-in-out infinite alternate;
+            filter: blur(15px);
+            opacity: 0.8;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.6; }
+            100% { opacity: 0.9; }
+        }
+
+        .alert-header {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: shimmer 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        .alert-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.8));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1); 
+            }
+            50% { 
+                transform: translateY(-10px) scale(1.05); 
+            }
+        }
+
+        .alert-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.2); }
+            100% { text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.4); }
+        }
+
+        .alert-body {
+            padding: 40px 30px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .alert-message {
+            color: #e6b0b0;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font-weight: 500;
+        }
+
+        .alert-details {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #e6b0b0;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .alert-btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            max-width: 200px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.8s;
+        }
+
+        .alert-btn:hover::before {
+            left: 100%;
+        }
+
+        .alert-btn-primary {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+            box-shadow: 
+                0 10px 30px rgba(220, 20, 60, 0.5),
+                0 0 0 1px rgba(220, 20, 60, 0.4);
+        }
+
+        .alert-btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 20px 50px rgba(220, 20, 60, 0.7),
+                0 0 0 1px rgba(220, 20, 60, 0.6);
+            animation: btnPulse 0.5s ease;
+        }
+
+        @keyframes btnPulse {
+            0% { transform: translateY(-5px) scale(1.05); }
+            50% { transform: translateY(-5px) scale(1.1); }
+            100% { transform: translateY(-5px) scale(1.05); }
+        }
+
+        .alert-btn-secondary {
+            background: linear-gradient(135deg, #2c0e0e 0%, #1a0a0a 100%);
+            color: #e6b0b0;
+            border: 3px solid #dc143c;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .alert-btn-secondary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(220, 20, 60, 0.5);
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+        }
+
+        /* Variantes específicas */
+        .alert-success .alert-header {
+            background: linear-gradient(135deg, #2ECC40 0%, #27ae60 100%);
+        }
+
+        .alert-success .alert-container::before {
+            background: linear-gradient(45deg, #2ECC40, #27ae60, #229954, #2ECC40);
+        }
+
+        .alert-error .alert-header {
+            background: linear-gradient(135deg, #FF4136 0%, #c0392b 100%);
+        }
+
+        .alert-error .alert-container::before {
+            background: linear-gradient(45deg, #FF4136, #c0392b, #e74c3c, #FF4136);
+        }
+
+        /* Efeitos de partículas épicas */
+        .alert-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleFloat 6s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        .particle-star {
+            background: #fff;
+            box-shadow: 0 0 20px #dc143c;
+            animation: starTwinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) rotate(0deg) scale(0); 
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            50% { 
+                transform: translateY(-60px) translateX(30px) rotate(180deg) scale(1.5); 
+                opacity: 0.8; 
+            }
+            90% { opacity: 0; }
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Loading Spinner Épico */
+        .exclusive-loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading-content {
+            position: relative;
+        }
+
+        .exclusive-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(220, 20, 60, 0.3);
+            border-top: 4px solid #dc143c;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .exclusive-spinner::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 4px solid transparent;
+            border-top: 4px solid #b22222;
+            border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+
+        .exclusive-spinner::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 4px solid transparent;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 2.5s linear infinite;
+        }
+
+        .loading-text {
+            color: #e6b0b0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Efeito de confete para sucesso */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #dc143c;
+            animation: confettiFall 5s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { 
+                transform: translateY(-100px) rotate(0deg); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(100vh) rotate(720deg); 
+                opacity: 0; 
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .alert-container {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .alert-header {
+                padding: 30px 20px;
+            }
+            
+            .alert-body {
+                padding: 30px 20px 25px;
+            }
+            
+            .alert-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .alert-btn {
+                max-width: none;
+            }
+            
+            .alert-icon {
+                font-size: 4rem;
+            }
+            
+            .alert-title {
+                font-size: 1.8rem;
+            }
+        }
+
         @media (max-width: 900px) {
             .admin-panel {
                 grid-template-columns: 1fr;
@@ -298,5 +723,29 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="exclusivo.js"></script>
+<!-- Sistema de Alertas Épicos para Exclusividade -->
+<div id="alertOverlay" class="alert-overlay">
+    <div class="alert-container">
+        <div class="alert-particles" id="alertParticles"></div>
+        <div class="alert-header">
+            <div class="alert-icon"></div>
+            <h3 class="alert-title"></h3>
+        </div>
+        <div class="alert-body">
+            <p class="alert-message"></p>
+            <div class="alert-details" id="alertDetails"></div>
+            <div class="alert-actions">
+                <button class="alert-btn alert-btn-secondary" id="alertCancel">CANCELAR</button>
+                <button class="alert-btn alert-btn-primary" id="alertConfirm">CONFIRMAR</button>
+            </div>
+            <div class="exclusive-loading" id="exclusiveLoading">
+                <div class="loading-content">
+                    <div class="exclusive-spinner"></div>
+                    <div class="loading-text">Atribuindo Exclusividade...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

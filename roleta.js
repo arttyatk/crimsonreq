@@ -15,7 +15,7 @@ function verificarAutenticacao() {
     return true;
 }
 
-// ---------------- FUNÇÃO populateRoulette (CORRIGIDA PARA FOTOS) ----------------
+// ---------------- FUNÇÃO populateRoulette (CORRIGIDA COM LÓGICA DE CONTAINER) ----------------
 function populateRoulette(items) {
     const $roulette = $('#roulette');
     $roulette.empty();
@@ -26,8 +26,8 @@ function populateRoulette(items) {
         'comum': '#FFFFFF',
         'incomum': '#90EE90',
         'raro': '#1E90FF',
-        'epico': '#FFD700',
-        'legendario': '#FFA500'
+        'epico': '#670a93ff',
+        'legendario': '#fff200ff'
     };
 
     // Duplicar os itens para roleta longa (MANTIDO)
@@ -37,16 +37,20 @@ function populateRoulette(items) {
         displayItems = displayItems.concat(items);
     }
 
-    // Criar os itens (MODIFICADO para remover o nome do item da roleta)
+    // Criar os itens (MODIFICADO para usar um container e uma classe)
     displayItems.forEach(item => {
         let content;
         
         // Prioriza a imagem
         if (item.imagem_url) {
-            // Adicionamos uma classe 'item-image' para facilitar o CSS
-            content = `<img src="${item.imagem_url}" alt="${item.nome}">`; 
+            // APLICAMOS A LÓGICA: O content agora é a imagem com uma CLASSE, dentro de um container
+            content = `
+                <div class="item-image-container">
+                    <img src="${item.imagem_url}" alt="${item.nome}" class="roulette-item-image">
+                </div>
+            `;
         } else {
-            // Se não houver URL, exibe o ícone padrão
+            // Se não houver URL, exibe o ícone padrão. O ícone fica direto no .item.
             let iconClass = "fas fa-question";
             if (item.tipo === "personagem") iconClass = "fas fa-user";
             if (item.tipo === "item") iconClass = "fas fa-shield-alt";
@@ -56,13 +60,14 @@ function populateRoulette(items) {
         const $itemDiv = $(`
             <div class="item">
                 ${content}
-                </div>
+            </div>
         `);
         // Adiciona cor da borda baseada na raridade
         $itemDiv.css('border-color', raridadeCores[item.raridade?.toLowerCase()] || '#FFF');
         $roulette.append($itemDiv);
     });
 
+    // ... (restante da função populateRoulette, que permanece inalterado)
     const $spinBtn = $('#spinButton');
     $spinBtn.off('click').on('click', function () {
         if (!verificarAutenticacao()) return;

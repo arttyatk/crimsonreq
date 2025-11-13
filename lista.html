@@ -278,6 +278,302 @@
             font-size: 0.9rem;
         }
 
+        /* Alertas Personalizados - Lista de Cadastros */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .alert-container {
+            background: linear-gradient(145deg, #1a0a0a 0%, #2c0e0e 100%);
+            border: 3px solid #dc143c;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 
+                0 25px 80px rgba(220, 20, 60, 0.4),
+                0 0 0 1px rgba(220, 20, 60, 0.2),
+                inset 0 0 50px rgba(220, 20, 60, 0.1);
+            transform: scale(0.8) translateY(-50px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-overlay.show .alert-container {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .alert-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #dc143c, #b22222, #8b0000, #dc143c);
+            background-size: 400% 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: borderGlow 3s ease infinite;
+            filter: blur(10px);
+            opacity: 0.7;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .alert-header {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+        }
+
+        .alert-icon {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+            animation: iconBounce 0.6s ease-out;
+        }
+
+        @keyframes iconBounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        .alert-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .alert-body {
+            padding: 40px 30px 30px;
+            text-align: center;
+        }
+
+        .alert-message {
+            color: #e6b0b0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .alert-btn {
+            flex: 1;
+            padding: 16px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            max-width: 160px;
+        }
+
+        .alert-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .alert-btn:hover::before {
+            left: 100%;
+        }
+
+        .alert-btn-primary {
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+        }
+
+        .alert-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(220, 20, 60, 0.6);
+        }
+
+        .alert-btn-secondary {
+            background: linear-gradient(135deg, #2c0e0e 0%, #1a0a0a 100%);
+            color: #e6b0b0;
+            border: 2px solid #dc143c;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(220, 20, 60, 0.4);
+            background: linear-gradient(135deg, #dc143c 0%, #b22222 100%);
+            color: white;
+        }
+
+        /* Variantes específicas */
+        .alert-confirm .alert-header {
+            background: linear-gradient(135deg, #FF851B 0%, #e67e22 100%);
+        }
+
+        .alert-success .alert-header {
+            background: linear-gradient(135deg, #2ECC40 0%, #27ae60 100%);
+        }
+
+        .alert-error .alert-header {
+            background: linear-gradient(135deg, #FF4136 0%, #c0392b 100%);
+        }
+
+        /* Efeitos de partículas */
+        .alert-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #dc143c;
+            border-radius: 50%;
+            animation: floatParticle 4s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(0); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-40px) translateX(20px) scale(1.5); 
+                opacity: 0.8; 
+            }
+            90% { 
+                opacity: 0; 
+            }
+        }
+
+        /* Loading Spinner para exclusão */
+        .delete-loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .delete-loading .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(220, 20, 60, 0.3);
+            border-top: 3px solid #dc143c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Efeito de shake para erros */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .alert-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .alert-container {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .alert-header {
+                padding: 25px 20px;
+            }
+            
+            .alert-body {
+                padding: 30px 20px 25px;
+            }
+            
+            .alert-actions {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .alert-btn {
+                max-width: none;
+            }
+        }
+
         @media (max-width: 900px) {
             .admin-panel {
                 grid-template-columns: 1fr;
@@ -444,6 +740,28 @@
         </footer>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="lista.js"></script>
+    </div>
+
+    <!-- Sistema de Alertas para Lista -->
+    <div id="alertOverlay" class="alert-overlay">
+        <div class="alert-container">
+            <div class="alert-particles" id="alertParticles"></div>
+            <div class="alert-header">
+                <div class="alert-icon"></div>
+                <h3 class="alert-title"></h3>
+            </div>
+            <div class="alert-body">
+                <p class="alert-message"></p>
+                <div class="alert-actions">
+                    <button class="alert-btn alert-btn-secondary" id="alertCancel">CANCELAR</button>
+                    <button class="alert-btn alert-btn-primary" id="alertConfirm">CONFIRMAR</button>
+                </div>
+                <div class="delete-loading" id="deleteLoading">
+                    <div class="loading-spinner"></div>
+                    <p style="color: #e6b0b0; margin-top: 10px;">Excluindo item...</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
