@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Banner - Com Animações</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: url('fundobn.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .gacha-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(40, 0, 0, 0.85);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.7);
+            border: 1px solid #800000;
+            position: relative;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+
+        .banner-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffcccc;
+        }
+
+        .banner-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            color: #ff9999;
+        }
+
+        .banner-details {
+            font-size: 13px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+            color: #ffb3b3;
+        }
+
+        .timer {
+            font-size: 15px;
+            margin-top: 12px;
+            color: #ff8080;
+            font-weight: bold;
+        }
+
+        .character-info {
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(80, 0, 0, 0.7);
+            border-bottom: 1px solid #600000;
+        }
+
+        .character-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ff6666;
+        }
+
+        .character-title {
+            font-size: 16px;
+            opacity: 0.9;
+            font-style: italic;
+            color: #ff9999;
+        }
+
+        .nav-buttons {
+            display: flex;
+            padding: 15px;
+            background-color: rgba(60, 0, 0, 0.8);
+            border-bottom: 1px solid #500000;
+        }
+
+        .nav-button {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(100, 0, 0, 0.7);
+            margin: 0 5px;
+            border-radius: 5px;
+            border: 1px solid #700000;
+            color: #ffb3b3;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(120, 0, 0, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(200, 0, 0, 0.3);
+        }
+
+        .details-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: rgba(150, 0, 0, 0.8);
+            border: 1px solid #a00000;
+            border-radius: 5px;
+            color: #ffcccc;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .details-button:hover {
+            background-color: rgba(180, 0, 0, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(200, 0, 0, 0.3);
+        }
+
+        .wish-buttons {
+            display: flex;
+            padding: 25px;
+            background-color: rgba(40, 0, 0, 0.8);
+            justify-content: space-between;
+        }
+
+        .wish-button {
+            background: linear-gradient(to bottom, #d10000, #a00000);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #600000;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wish-button:hover {
+            background: linear-gradient(to bottom, #e10000, #b00000);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #700000;
+        }
+
+        .wish-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 0 #600000;
+        }
+
+        .wish-button .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .wish-button .shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .wish-cost {
+            font-size: 15px;
+            margin-top: 8px;
+            text-align: center;
+            color: #ff9999;
+        }
+
+        .uid-display {
+            text-align: center;
+            padding: 12px;
+            font-size: 13px;
+            color: #ff8080;
+            background-color: rgba(60, 0, 0, 0.8);
+            border-top: 1px solid #500000;
+        }
+
+        /* Efeito de overlay escuro */
+        .dark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 50;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Efeito de cometa */
+        .comet {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+            transform: scale(0);
+            z-index: 60;
+            display: none;
+        }
+
+        .comet-tail {
+            position: absolute;
+            width: 500px;
+            height: 20px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            transform-origin: left center;
+            transform: rotate(45deg) scaleX(0);
+            z-index: 59;
+            display: none;
+        }
+
+        /* Modal de resultado */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: rgba(60, 0, 0, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            border: 2px solid #a00000;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.7);
+            opacity: 0;
+            transform: scale(0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ff9999;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #ff6666;
+            transform: rotate(90deg);
+        }
+
+        .continue-button {
+            background: linear-gradient(to bottom, #d10000, #a00000);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #600000;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .continue-button:hover {
+            background: linear-gradient(to bottom, #e10000, #b00000);
+            transform: translateY(-2px) translateY(20px);
+            box-shadow: 0 6px 0 #700000;
+        }
+
+        .item-result {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(80, 0, 0, 0.7);
+            border-radius: 10px;
+            opacity: 0;
+            transform: scale(0.8);
+            max-width: 300px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .item-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .item-rarity-5 {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .item-rarity-4 {
+            color: #ff80bf;
+            text-shadow: 0 0 8px rgba(255, 128, 191, 0.4);
+        }
+
+        .item-rarity-3 {
+            color: #80b3ff;
+            text-shadow: 0 0 6px rgba(128, 179, 255, 0.3);
+        }
+
+        .item-type {
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0.9;
+            color: #ffb3b3;
+            text-align: center;
+        }
+
+        .multi-results {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .multi-item {
+            padding: 15px;
+            background-color: rgba(80, 0, 0, 0.7);
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            width: 100%;
+        }
+
+        .multi-item:hover {
+            transform: scale(1.05) translateY(0);
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .item-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .modal-title {
+            color: #ff9999;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* NOVO: Efeitos de brilho para bordas por raridade */
+        .rarity-border-comum {
+            border: 3px solid #ffffff;
+            animation: glow-white 2s infinite alternate;
+        }
+
+        .rarity-border-incomum {
+            border: 3px solid #90ee90;
+            animation: glow-green 2s infinite alternate;
+        }
+
+        .rarity-border-raro {
+            border: 3px solid #1e90ff;
+            animation: glow-blue 2s infinite alternate;
+        }
+
+        .rarity-border-epico {
+            border: 3px solid #670a93;
+            animation: glow-purple 2s infinite alternate;
+        }
+
+        .rarity-border-legendario {
+            border: 3px solid #ffd700;
+            animation: glow-gold 2s infinite alternate;
+        }
+
+        .rarity-border-3-star {
+            border: 3px solid #1e90ff;
+            animation: glow-blue 2s infinite alternate;
+        }
+
+        .rarity-border-4-star {
+            border: 3px solid #670a93;
+            animation: glow-purple 2s infinite alternate;
+        }
+
+        .rarity-border-5-star {
+            border: 3px solid #ffd700;
+            animation: glow-gold 2s infinite alternate;
+        }
+
+        @keyframes glow-white {
+            from {
+                box-shadow: 0 0 5px #ffffff;
+            }
+            to {
+                box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff;
+            }
+        }
+
+        @keyframes glow-green {
+            from {
+                box-shadow: 0 0 5px #90ee90;
+            }
+            to {
+                box-shadow: 0 0 20px #90ee90, 0 0 30px #90ee90;
+            }
+        }
+
+        @keyframes glow-blue {
+            from {
+                box-shadow: 0 0 5px #1e90ff;
+            }
+            to {
+                box-shadow: 0 0 20px #1e90ff, 0 0 30px #1e90ff;
+            }
+        }
+
+        @keyframes glow-purple {
+            from {
+                box-shadow: 0 0 5px #670a93;
+            }
+            to {
+                box-shadow: 0 0 20px #670a93, 0 0 30px #670a93;
+            }
+        }
+
+        @keyframes glow-gold {
+            from {
+                box-shadow: 0 0 5px #ffd700;
+            }
+            to {
+                box-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700;
+            }
+        }
+
+        /* Efeitos de brilho para itens raros (mantido para compatibilidade) */
+        .rarity-glow-5 {
+            animation: glow-gold 2s infinite alternate;
+        }
+
+        .rarity-glow-4 {
+            animation: glow-purple 2s infinite alternate;
+        }
+
+        /* Estrelas de fundo para animação */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 40;
+            display: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 450px;
+            font-size: 24px;
+            color: #ff9999;
+        }
+
+        /* Alertas personalizados */
+        .alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-alert {
+            background: linear-gradient(135deg, #2a0a0a, #4a0a0a);
+            border: 2px solid #a00000;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.5);
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        .custom-alert.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .alert-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .alert-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcccc;
+        }
+
+        .alert-message {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #ffb3b3;
+            line-height: 1.4;
+        }
+
+        .alert-button {
+            background: linear-gradient(to bottom, #d10000, #a00000);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .alert-button:hover {
+            background: linear-gradient(to bottom, #e10000, #b00000);
+            transform: translateY(-2px);
+        }
+
+        /* Modal de Detalhes */
+        .details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 150;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .details-content {
+            background: linear-gradient(135deg, #2a0a0a, #4a0a0a);
+            border: 2px solid #a00000;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.5);
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        .details-content.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .details-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #a00000;
+            padding-bottom: 15px;
+        }
+
+        .details-title {
+            font-size: 28px;
+            color: #ffcccc;
+            margin-bottom: 10px;
+        }
+
+        .details-subtitle {
+            font-size: 16px;
+            color: #ff9999;
+        }
+
+        .rarity-section {
+            margin-bottom: 30px;
+        }
+
+        .rarity-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .rarity-comum { background-color: rgba(255, 255, 255, 0.2); color: #ffffff; }
+        .rarity-incomum { background-color: rgba(144, 238, 144, 0.3); color: #90ee90; }
+        .rarity-raro { background-color: rgba(30, 144, 255, 0.3); color: #1e90ff; }
+        .rarity-epico { background-color: rgba(103, 10, 147, 0.3); color: #670a93; }
+        .rarity-legendario { background-color: rgba(255, 215, 0, 0.3); color: #ffd700; }
+
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .character-card {
+            background-color: rgba(80, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #700000;
+            transition: all 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(200, 0, 0, 0.4);
+        }
+
+        .character-card-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin: 0 auto 10px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid;
+        }
+
+        .character-card-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .character-card-rarity {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .close-details {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ff9999;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+        }
+
+        .close-details:hover {
+            color: #ff6666;
+            transform: rotate(90deg);
+        }
+
+        /* Scrollbar personalizado */
+        .details-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .details-content::-webkit-scrollbar-track {
+            background: rgba(60, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+
+        .details-content::-webkit-scrollbar-thumb {
+            background: #a00000;
+            border-radius: 4px;
+        }
+
+        .details-content::-webkit-scrollbar-thumb:hover {
+            background: #c00000;
+        }
+    </style>
+</head>
+<body>
+    <div class="gacha-container">
+        <div class="banner-image" id="banner-image">
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Carregando banner...
+            </div>
+            <button class="details-button">Detalhes</button>
+            <div class="banner-overlay">
+                <div class="banner-title" id="banner-title">Carregando...</div>
+                <div class="banner-subtitle" id="banner-subtitle">Carregando...</div>
+                <div class="banner-details" id="banner-details">
+                    A cada giro de 10 é garantido pelo menos um personagem de 4 estrelas.
+                    <br>
+                    Evento de 5 estrelas exclusivo, somente durante a duração do banner será possível obter o personagem limitado em seus giros.
+                </div>
+                <div class="timer" id="timer">Tempo restante: Carregando...</div>
+            </div>
+        </div>
+
+        <div class="character-info">
+            <div class="character-name" id="character-name">Carregando...</div>
+            <div class="character-title" id="character-title">Carregando...</div>
+        </div>
+
+        <div class="wish-buttons">
+            <div style="margin-left: 60px;">
+                <button class="wish-button" id="wish-1">
+                    <div class="shine"></div>
+                    <span class="icon">✨</span> Girar x1
+                </button>
+                <div class="wish-cost" id="wish-cost-1">Custo: Carregando...</div>
+            </div>
+            <div style="margin-right: 60px;">
+                <button class="wish-button" id="wish-10">
+                    <div class="shine"></div>
+                    <span class="icon">✨✨</span> Girar x10
+                </button>
+                <div class="wish-cost" id="wish-cost-10">Custo: Carregando...</div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-button" id="coin-display">Carregando...</button>
+            <button class="nav-button">Shop</button>
+            <button class="nav-button">History</button>
+        </div>
+
+        <div class="uid-display">UID: <span id="uid-display">Carregando...</span></div>
+    </div>
+
+    <!-- Efeitos de animação -->
+    <div class="dark-overlay" id="dark-overlay"></div>
+    <div class="comet" id="comet"></div>
+    <div class="comet-tail" id="comet-tail"></div>
+    <div class="stars" id="stars"></div>
+
+    <!-- Modal de resultados -->
+    <div class="modal" id="result-modal">
+        <div class="modal-content" id="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Resultados do Gacha</h2>
+            <div id="single-result">
+                <!-- Conteúdo será adicionado dinamicamente -->
+            </div>
+            <div class="multi-results" id="multi-results">
+                <!-- Itens serão adicionados dinamicamente aqui -->
+            </div>
+            <button class="continue-button" id="continue-button">Continuar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="details-modal" id="details-modal">
+        <div class="details-content" id="details-content">
+            <button class="close-details">&times;</button>
+            <div class="details-header">
+                <h2 class="details-title" id="details-title">Personagens do Banner</h2>
+                <div class="details-subtitle" id="details-subtitle">Todos os personagens disponíveis neste banner</div>
+            </div>
+            <div id="characters-list">
+                <!-- Personagens serão carregados aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas personalizados -->
+    <div class="alert-overlay" id="alertOverlay">
+        <div class="custom-alert" id="customAlert">
+            <div class="alert-icon" id="alertIcon">⚠️</div>
+            <div class="alert-title" id="alertTitle">Título</div>
+            <div class="alert-message" id="alertMessage">Mensagem</div>
+            <button class="alert-button" id="alertButton">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // ---------------- CONSTANTES E VARIÁVEIS GLOBAIS ----------------
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let bannerData = {};
+        let bannerId = null;
+        let userStarCoins = 0;
+        let userId = null;
+        let allCharacters = [];
+        let bannerPreco = 0;
+
+        // Mapeamento de raridades para cores e classes de borda - CORRIGIDO
+        const rarityColors = {
+            'comum': { color: '#ffffff', class: 'rarity-comum', border: 'rarity-border-comum', stars: '1★' },
+            'incomum': { color: '#90ee90', class: 'rarity-incomum', border: 'rarity-border-incomum', stars: '2★' },
+            'raro': { color: '#1e90ff', class: 'rarity-raro', border: 'rarity-border-raro', stars: '3★' },
+            'epico': { color: '#670a93', class: 'rarity-epico', border: 'rarity-border-epico', stars: '4★' },
+            'legendario': { color: '#ffd700', class: 'rarity-legendario', border: 'rarity-border-legendario', stars: '5★' },
+            '3-star': { color: '#1e90ff', class: 'rarity-raro', border: 'rarity-border-3-star', stars: '3★' },
+            '4-star': { color: '#670a93', class: 'rarity-epico', border: 'rarity-border-4-star', stars: '4★' },
+            '5-star': { color: '#ffd700', class: 'rarity-legendario', border: 'rarity-border-5-star', stars: '5★' }
+        };
+
+        // ---------------- FUNÇÕES AUXILIARES ----------------
+        function obterCookie(nome) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${nome}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function verificarAutenticacao() {
+            const token = obterCookie('token');
+            userId = obterCookie('user_id');
+            
+            if (!token || !userId) {
+                showCustomAlert('warning', 'Atenção!', 'Você precisa estar logado para usar o gacha!');
+                return false;
+            }
+            return true;
+        }
+
+        // ---------------- SISTEMA DE ALERTAS PERSONALIZADOS ----------------
+        function showCustomAlert(type, title, message) {
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            const $icon = $('#alertIcon');
+            const $alertTitle = $('#alertTitle');
+            const $alertMessage = $('#alertMessage');
+            
+            const icons = {
+                'error': '❌',
+                'warning': '⚠️',
+                'success': '✅',
+                'info': 'ℹ️'
+            };
+            
+            $alert.removeClass('error warning success info').addClass(type);
+            $icon.text(icons[type] || '⚠️');
+            $alertTitle.text(title);
+            $alertMessage.text(message);
+            
+            gsap.killTweensOf([$alert[0], $overlay[0]]);
+            
+            gsap.timeline()
+                .set($overlay[0], { display: 'flex' })
+                .set($alert[0], { display: 'block' })
+                .to($overlay[0], { duration: 0.3, opacity: 1, ease: "power2.out" })
+                .to($alert[0], { 
+                    duration: 0.4, 
+                    opacity: 1, 
+                    scale: 1, 
+                    ease: "back.out(1.7)",
+                    onStart: () => {
+                        $overlay.addClass('show');
+                        $alert.addClass('show');
+                    }
+                }, "-=0.2");
+        }
+
+        function hideCustomAlert() {
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            
+            gsap.timeline()
+                .to($alert[0], { duration: 0.3, opacity: 0, scale: 0.8, ease: "power2.in" })
+                .to($overlay[0], { 
+                    duration: 0.3, 
+                    opacity: 0, 
+                    ease: "power2.out",
+                    onComplete: () => {
+                        $overlay.removeClass('show');
+                        $alert.removeClass('show');
+                        $overlay[0].style.display = 'none';
+                        $alert[0].style.display = 'none';
+                    }
+                }, "-=0.2");
+        }
+
+        // ---------------- MODAL DE DETALHES ----------------
+        function showDetailsModal() {
+            const modal = document.getElementById('details-modal');
+            const content = document.getElementById('details-content');
+            const title = document.getElementById('details-title');
+            const subtitle = document.getElementById('details-subtitle');
+            const charactersList = document.getElementById('characters-list');
+            
+            // Atualizar título
+            title.textContent = `Personagens do Banner - ${bannerData.nome || 'Banner'}`;
+            subtitle.textContent = `Total de ${allCharacters.length} personagens disponíveis`;
+            
+            // Agrupar personagens por raridade
+            const charactersByRarity = groupCharactersByRarity(allCharacters);
+            
+            // Gerar HTML dos personagens
+            charactersList.innerHTML = generateCharactersHTML(charactersByRarity);
+            
+            // Mostrar modal com animação
+            modal.style.display = 'flex';
+            gsap.killTweensOf(content);
+            gsap.to(content, {
+                duration: 0.4,
+                opacity: 1,
+                scale: 1,
+                ease: "back.out(1.7)",
+                onStart: () => {
+                    content.classList.add('show');
+                }
+            });
+        }
+
+        function hideDetailsModal() {
+            const modal = document.getElementById('details-modal');
+            const content = document.getElementById('details-content');
+            
+            gsap.to(content, {
+                duration: 0.3,
+                opacity: 0,
+                scale: 0.9,
+                ease: "power2.in",
+                onComplete: () => {
+                    content.classList.remove('show');
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        function groupCharactersByRarity(characters) {
+            const groups = {};
+            
+            characters.forEach(character => {
+                const rarity = character.raridade?.toLowerCase() || 'comum';
+                if (!groups[rarity]) {
+                    groups[rarity] = [];
+                }
+                groups[rarity].push(character);
+            });
+            
+            // Ordenar por raridade (mais raro primeiro)
+            const rarityOrder = ['5-star', 'legendario', '4-star', 'epico', '3-star', 'raro', 'incomum', 'comum'];
+            const sortedGroups = {};
+            
+            rarityOrder.forEach(rarity => {
+                if (groups[rarity]) {
+                    sortedGroups[rarity] = groups[rarity];
+                }
+            });
+            
+            // Adicionar quaisquer outras raridades não mapeadas
+            Object.keys(groups).forEach(rarity => {
+                if (!sortedGroups[rarity]) {
+                    sortedGroups[rarity] = groups[rarity];
+                }
+            });
+            
+            return sortedGroups;
+        }
+
+        function generateCharactersHTML(charactersByRarity) {
+            let html = '';
+            
+            Object.keys(charactersByRarity).forEach(rarity => {
+                const characters = charactersByRarity[rarity];
+                const rarityInfo = rarityColors[rarity] || rarityColors['comum'];
+                const displayName = getRarityDisplayName(rarity);
+                
+                html += `
+                    <div class="rarity-section">
+                        <div class="rarity-title ${rarityInfo.class}">
+                            ${displayName} (${characters.length} personagens)
+                        </div>
+                        <div class="characters-grid">
+                            ${characters.map(character => `
+                                <div class="character-card">
+                                    <div class="character-card-image" style="
+                                        background-image: url('${character.imagem_url || 'https://via.placeholder.com/80/773333/ffffff?text=?'}');
+                                        border-color: ${rarityInfo.color}">
+                                    </div>
+                                    <div class="character-card-name" style="color: ${rarityInfo.color}">
+                                        ${character.nome}
+                                    </div>
+                                    <div class="character-card-rarity">
+                                        Taxa: ${character.taxa_drop || 'N/A'}%
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        function getRarityDisplayName(rarity) {
+            const names = {
+                'comum': '1★ Comum',
+                'incomum': '2★ Incomum', 
+                'raro': '3★ Raro',
+                'epico': '4★ Épico',
+                'legendario': '5★ Lendário',
+                '3-star': '3★ 3 Estrelas',
+                '4-star': '4★ 4 Estrelas',
+                '5-star': '5★ 5 Estrelas'
+            };
+            return names[rarity] || rarity;
+        }
+
+        // ---------------- CARREGAMENTO DE DADOS ----------------
+        function getBannerIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('bannerId');
+        }
+
+        function loadBannerData() {
+            bannerId = getBannerIdFromURL();
+            
+            if (!bannerId) {
+                showCustomAlert('error', 'Erro!', 'Banner não especificado na URL!');
+                useDummyData();
+                return;
+            }
+
+            const token = obterCookie('token');
+            $.ajax({
+                url: `${API_URL}/banners-boxes/${bannerId}`,
+                type: 'GET',
+                headers: { "Authorization": "Bearer " + token },
+                success: function(response) {
+                    console.log('Dados completos do banner:', response);
+                    
+                    bannerData = response.banner || response;
+                    
+                    // CORREÇÃO: Lidar com diferentes estruturas de resposta
+                    let exclusivos = [];
+                    
+                    if (response.exclusivos && Array.isArray(response.exclusivos)) {
+                        exclusivos = response.exclusivos;
+                    } else if (response.items && Array.isArray(response.items)) {
+                        exclusivos = response.items;
+                    } else if (response.banner && response.banner.exclusivos) {
+                        exclusivos = response.banner.exclusivos;
+                    }
+                    
+                    console.log('Itens exclusivos encontrados:', exclusivos);
+                    
+                    // CORREÇÃO: Filtrar APENAS personagens
+                    allCharacters = exclusivos
+                        .filter(item => {
+                            if (!item) return false;
+                            
+                            const tipo = item.tipo ? item.tipo.toLowerCase() : '';
+                            const nome = item.nome ? item.nome.toLowerCase() : '';
+                            
+                            // Aceitar APENAS personagens
+                            return tipo === 'personagem' || 
+                                tipo === 'character' ||
+                                // Se não tem tipo definido, assumir que é personagem baseado no contexto do banner
+                                (!tipo && (nome.includes('personagem') || nome.includes('character') || !nome.includes('item')));
+                        })
+                        .map(item => ({
+                            id: item.id,
+                            nome: item.nome,
+                            imagem_url: item.imagem_url,
+                            raridade: item.raridade,
+                            tipo: item.tipo || 'personagem', // Forçar tipo como personagem
+                            taxa_drop: parseFloat(item.pivot_taxa_drop) || parseFloat(item.taxa_drop) || 1.0,
+                            star_coin_reward: item.star_coin_reward || 0
+                        }));
+                    
+                    console.log('Personagens carregados:', allCharacters);
+                    
+                    // Se nenhum personagem foi encontrado, mostrar erro
+                    if (allCharacters.length === 0) {
+                        console.error('Nenhum personagem encontrado no banner!');
+                        showCustomAlert('error', 'Erro de Configuração!', 
+                            'Este banner não possui personagens configurados. Contate o administrador.');
+                        return;
+                    }
+                    
+                    // Configurar preço do banner
+                    bannerPreco = parseFloat(bannerData.preco) || 1;
+                    
+                    updateBannerUI();
+                    updateCurrentBanner();
+                    hideLoading();
+                    carregarMoedasUsuario();
+                },
+                error: function(xhr) {
+                    console.error('Erro ao carregar dados do banner:', xhr.responseText);
+                    showCustomAlert('error', 'Erro!', 'Erro ao carregar o banner: ' + xhr.responseText);
+                    useDummyData();
+                    hideLoading();
+                }
+            });
+        }
+
+        function useDummyData() {
+            bannerData = {
+                id: bannerId || 1,
+                nome: "Fúria do Eclipse",
+                descricao: "Guts - O Espadachim Negro",
+                imagem_url: "https://placehold.co/900x450/800000/ffffff?text=Banner+Evento",
+                preco: 1,
+                personagem_nome: "Guts",
+                personagem_titulo: "O Espadachim Negro",
+                tempo_restante: "18 dia(s) 29 hora(s)",
+                detalhes: "A cada giro de 10 é garantido pelo menos um personagem de 4 estrelas."
+            };
+            
+            // CORREÇÃO: Garantir que todos são personagens
+            allCharacters = [
+                { id: 1, nome: "Guts", tipo: "personagem", raridade: "5-star", taxa_drop: 0.6, imagem_url: "https://via.placeholder.com/100/ffd700/000000?text=Guts" },
+                { id: 2, nome: "Character A", tipo: "personagem", raridade: "4-star", taxa_drop: 5.1, imagem_url: "https://via.placeholder.com/100/ff80bf/000000?text=4★" },
+                { id: 3, nome: "Character B", tipo: "personagem", raridade: "3-star", taxa_drop: 94.3, imagem_url: "https://via.placeholder.com/100/80b3ff/000000?text=3★" },
+                { id: 4, nome: "Character C", tipo: "personagem", raridade: "4-star", taxa_drop: 5.1, imagem_url: "https://via.placeholder.com/100/ff80bf/000000?text=4★" },
+                { id: 5, nome: "Character D", tipo: "personagem", raridade: "3-star", taxa_drop: 94.3, imagem_url: "https://via.placeholder.com/100/80b3ff/000000?text=3★" }
+            ];
+            
+            bannerPreco = 1;
+            updateBannerUI();
+            updateCurrentBanner();
+            carregarMoedasUsuario();
+        }
+
+        function updateBannerUI() {
+            // Atualizar imagem do banner
+            if (bannerData.imagem_url) {
+                document.getElementById('banner-image').style.backgroundImage = `url('${bannerData.imagem_url}')`;
+            }
+
+            // Atualizar textos
+            document.getElementById('banner-title').textContent = bannerData.nome || 'Banner sem nome';
+            document.getElementById('banner-subtitle').textContent = bannerData.descricao || 'Sem descrição';
+            document.getElementById('banner-details').textContent = bannerData.detalhes || 'Detalhes do banner não disponíveis.';
+            document.getElementById('timer').textContent = `Tempo restante: ${bannerData.tempo_restante || 'Indisponível'}`;
+            
+            // Atualizar informações do personagem
+            document.getElementById('character-name').textContent = bannerData.personagem_nome || 'Personagem';
+            document.getElementById('character-title').textContent = bannerData.personagem_titulo || 'Título não disponível';
+            
+            // Atualizar custos
+            document.getElementById('wish-cost-1').textContent = `Custo: ${bannerPreco}`;
+            document.getElementById('wish-cost-10').textContent = `Custo: ${bannerPreco * 10}`;
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // ---------------- SISTEMA DE MOEDAS ----------------
+        function carregarMoedasUsuario() {
+            const token = obterCookie('token');
+            userId = obterCookie('user_id');
+            
+            if (!token || !userId) {
+                console.log('Usuário não autenticado');
+                return;
+            }
+
+            $.ajax({
+                url: `${API_URL}/inventario/${userId}`,
+                type: 'GET',
+                headers: { "Authorization": "Bearer " + token },
+                success: function(response) {
+                    const starCoins = response.user_info?.star_coins || 0;
+                    userStarCoins = starCoins;
+                    
+                    // Atualiza o display de moedas
+                    $('#coin-display').text(`${starCoins} Star Coins`);
+                    $('#uid-display').text(userId);
+                    
+                    // Verifica se tem moedas suficientes e atualiza os botões
+                    atualizarEstadoBotoes(starCoins);
+                },
+                error: function(xhr) {
+                    console.error('Erro ao carregar moedas:', xhr.responseText);
+                    $('#coin-display').text('Erro ao carregar');
+                }
+            });
+        }
+
+        function atualizarEstadoBotoes(starCoins) {
+            const wish1Btn = document.getElementById('wish-1');
+            const wish10Btn = document.getElementById('wish-10');
+            
+            const custo1 = bannerPreco;
+            const custo10 = bannerPreco * 10;
+            
+            if (starCoins < custo1) {
+                wish1Btn.disabled = true;
+                wish1Btn.style.opacity = '0.6';
+            } else {
+                wish1Btn.disabled = false;
+                wish1Btn.style.opacity = '1';
+            }
+            
+            if (starCoins < custo10) {
+                wish10Btn.disabled = true;
+                wish10Btn.style.opacity = '0.6';
+            } else {
+                wish10Btn.disabled = false;
+                wish10Btn.style.opacity = '1';
+            }
+        }
+
+        // ---------------- SISTEMA GACHA ----------------
+        let currentBanner = {
+            name: "",
+            rateUp5Star: [],
+            rateUp4Star: []
+        };
+
+        function updateCurrentBanner() {
+            if (bannerData.personagem_nome) {
+                currentBanner.name = bannerData.nome;
+                currentBanner.rateUp5Star = [bannerData.personagem_nome];
+                
+                // Configurar personagens rate-up baseados na raridade
+                currentBanner.rateUp4Star = allCharacters
+                    .filter(char => char.raridade === '4-star')
+                    .map(char => char.nome)
+                    .slice(0, 3);
+            }
+        }
+
+
+        // ---------------- FUNÇÃO PRINCIPAL DO GACHA ----------------
+        function doWish(count) {
+            if (!verificarAutenticacao()) return;
+
+            const token = obterCookie('token');
+            const custo = count === 1 ? bannerPreco : bannerPreco * 10;
+
+            // Verificar saldo
+            if (userStarCoins < custo) {
+                showCustomAlert('warning', 'Saldo Insuficiente!', 
+                    `Você precisa de ${custo} Star Coins.\nSeu saldo: ${userStarCoins}`);
+                return;
+            }
+
+            // Verificar se temos personagens disponíveis
+            if (allCharacters.length === 0) {
+                showCustomAlert('error', 'Erro!', 'Nenhum personagem disponível neste banner!');
+                return;
+            }
+
+            // Desativar botões durante a animação
+            document.getElementById('wish-1').disabled = true;
+            document.getElementById('wish-10').disabled = true;
+
+            // Mostrar overlay escuro
+            const darkOverlay = document.getElementById('dark-overlay');
+            darkOverlay.style.display = 'flex';
+            gsap.fromTo(darkOverlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+
+            // Criar estrelas
+            createStars();
+
+            // Fazer requisição para o servidor
+            $.ajax({
+                url: `${API_URL}/gacha/spin/${bannerId}`,
+                type: 'POST',
+                headers: { "Authorization": "Bearer " + token },
+                data: { 
+                    count: count
+                },
+                success: function(response) {
+                    console.log('Resposta do gacha:', response);
+                    
+                    // Atualizar moedas
+                    if (response.novo_saldo_star_coins !== undefined) {
+                        userStarCoins = response.novo_saldo_star_coins;
+                        $('#coin-display').text(`${userStarCoins} Star Coins`);
+                        atualizarEstadoBotoes(userStarCoins);
+                    }
+                    
+                    // Processar resultados
+                    let results = [];
+                    
+                    if (Array.isArray(response.items)) {
+                        results = response.items;
+                    } else if (response.item) {
+                        results = [response.item];
+                    } else if (response.items && typeof response.items === 'object') {
+                        results = Object.values(response.items);
+                    } else if (response.resultados) {
+                        results = response.resultados;
+                    }
+                    
+                    console.log('Resultados recebidos:', results);
+                    
+                    // Se não há resultados, usar fallback
+                    if (results.length === 0) {
+                        console.warn('Nenhum resultado retornado, usando fallback');
+                        results = generateFallbackResults(count);
+                    }
+                    
+                    // VALIDAÇÃO: Garantir estrutura dos dados
+                    results = results.map(item => {
+                        if (!item.tipo) {
+                            item.tipo = 'personagem';
+                        }
+                        
+                        if (!item.raridade) {
+                            if (item.nome && (item.nome.includes('5') || item.nome.includes('★5'))) {
+                                item.raridade = '5-star';
+                            } else if (item.nome && (item.nome.includes('4') || item.nome.includes('★4'))) {
+                                item.raridade = '4-star';
+                            } else {
+                                item.raridade = '3-star';
+                            }
+                        }
+                        
+                        if (!item.imagem_url) {
+                            const color = item.raridade === '5-star' ? 'ffd700' : 
+                                        item.raridade === '4-star' ? 'ff80bf' : '80b3ff';
+                            item.imagem_url = `https://via.placeholder.com/100/${color}/000000?text=${item.nome?.substring(0, 3) || '???'}`;
+                        }
+                        
+                        return item;
+                    });
+                    
+                    console.log('Resultados finais:', results);
+                    
+                    const maxRarity = getMaxRarity(results);
+                    
+                    // Sequência de animações
+                    const masterTL = gsap.timeline({
+                        onComplete: () => {
+                            document.getElementById('wish-1').disabled = false;
+                            document.getElementById('wish-10').disabled = false;
+                        }
+                    });
+                    
+                    // Animação do cometa
+                    masterTL.add(playCometAnimation(maxRarity));
+                    
+                    // Mostrar resultados após o cometa
+                    masterTL.call(() => {
+                        showResults(results, maxRarity);
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Erro no gacha:', xhr);
+                    const errorMsg = xhr.responseJSON?.message || xhr.responseText || 'Erro desconhecido';
+                    
+                    showCustomAlert('error', 'Erro!', 'Erro ao girar o gacha: ' + errorMsg);
+                    
+                    // Reativar botões em caso de erro
+                    document.getElementById('wish-1').disabled = false;
+                    document.getElementById('wish-10').disabled = false;
+                    darkOverlay.style.display = 'none';
+                }
+            });
+        }
+
+        // Função para gerar resultados de fallback quando a API não retorna dados
+        function generateFallbackResults(count) {
+            const results = [];
+            
+            for (let i = 0; i < count; i++) {
+                // Simular probabilidades baseadas nos personagens disponíveis
+                const roll = Math.random() * 100;
+                let rarity, character;
+                
+                // Encontrar personagem baseado na probabilidade
+                if (roll < 0.6) { // 0.6% chance para 5-star
+                    character = allCharacters.find(char => char.raridade === '5-star') || 
+                            allCharacters[0]; // fallback
+                    rarity = "5-star";
+                } else if (roll < 5.1) { // 4.5% chance para 4-star
+                    const fourStarChars = allCharacters.filter(char => char.raridade === '4-star');
+                    character = fourStarChars[Math.floor(Math.random() * fourStarChars.length)] || 
+                            allCharacters[0]; // fallback
+                    rarity = "4-star";
+                } else {
+                    const threeStarChars = allCharacters.filter(char => char.raridade === '3-star');
+                    character = threeStarChars[Math.floor(Math.random() * threeStarChars.length)] || 
+                            allCharacters[0]; // fallback
+                    rarity = "3-star";
+                }
+                
+                // Usar dados do personagem real se disponível
+                if (character) {
+                    results.push({
+                        nome: character.nome,
+                        tipo: 'personagem',
+                        raridade: character.raridade || rarity,
+                        imagem_url: character.imagem_url || `https://via.placeholder.com/100/${
+                            rarity === '5-star' ? 'ffd700' : 
+                            rarity === '4-star' ? 'ff80bf' : '80b3ff'
+                        }/000000?text=${character.nome?.substring(0, 3) || '???'}`
+                    });
+                } else {
+                    // Fallback genérico
+                    results.push({
+                        nome: `Personagem ${i + 1}`,
+                        tipo: 'personagem',
+                        raridade: rarity,
+                        imagem_url: `https://via.placeholder.com/100/${
+                            rarity === '5-star' ? 'ffd700' : 
+                            rarity === '4-star' ? 'ff80bf' : '80b3ff'
+                        }/000000?text=${rarity.charAt(0)}★`
+                    });
+                }
+            }
+            
+            return results;
+        }
+
+        // ---------------- FUNÇÕES DE ANIMAÇÃO ----------------
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
+            
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = Math.random();
+                stars.appendChild(star);
+            }
+        }
+
+        function playCometAnimation(rarity) {
+            let color, size, duration;
+            switch(rarity) {
+                case '5-star':
+                    color = 'radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(255,215,0,0) 70%)';
+                    size = 1.5;
+                    duration = 1.5;
+                    break;
+                case '4-star':
+                    color = 'radial-gradient(circle, rgba(255,128,191,0.9) 0%, rgba(255,128,191,0) 70%)';
+                    size = 1.2;
+                    duration = 1.2;
+                    break;
+                default:
+                    color = 'radial-gradient(circle, rgba(128,179,255,0.9) 0%, rgba(128,179,255,0) 70%)';
+                    size = 1;
+                    duration = 1;
+            }
+            
+            const comet = document.getElementById('comet');
+            const cometTail = document.getElementById('comet-tail');
+            const stars = document.getElementById('stars');
+            
+            comet.style.background = color;
+            comet.style.display = 'block';
+            comet.style.left = '20%';
+            comet.style.top = '-150px';
+            
+            cometTail.style.display = 'block';
+            cometTail.style.left = '20%';
+            cometTail.style.top = '-150px';
+            cometTail.style.background = `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${color.includes('gold') ? 'rgba(255,215,0,0.6)' : color.includes('191') ? 'rgba(255,128,191,0.6)' : 'rgba(128,179,255,0.6)'} 50%, rgba(255,255,255,0) 100%)`;
+            
+            stars.style.display = 'block';
+            
+            const tl = gsap.timeline();
+            
+            tl.to(comet, { scale: size, duration: 0.1, ease: 'power1.out' })
+              .to(comet, { left: '80%', top: '60%', duration: duration, ease: 'power1.in' })
+              .to(comet, { scale: 0, duration: 0.3, ease: 'power2.out' }, `-=${duration * 0.3}`)
+              .to(cometTail, { scaleX: 1, duration: 0.1, ease: 'power1.out' }, 0)
+              .to(cometTail, { left: '80%', top: '60%', duration: duration, ease: 'power1.in' }, 0)
+              .to(cometTail, { scaleX: 0, duration: 0.3, ease: 'power2.out' }, `-=${duration * 0.3}`)
+              .call(() => {
+                  comet.style.display = 'none';
+                  cometTail.style.display = 'none';
+                  stars.style.display = 'none';
+              });
+            
+            return tl;
+        }
+
+        function getRarityBorderClass(rarity) {
+            const rarityInfo = rarityColors[rarity?.toLowerCase()] || rarityColors['comum'];
+            return rarityInfo.border;
+        }
+
+        // Função para obter as estrelas baseadas na raridade
+        function getRarityStars(rarity) {
+            const rarityInfo = rarityColors[rarity?.toLowerCase()] || rarityColors['comum'];
+            return rarityInfo.stars;
+        }
+
+        // Função para obter a raridade máxima dos resultados
+        function getMaxRarity(results) {
+            if (results.some(item => item.raridade === '5-star')) return '5-star';
+            if (results.some(item => item.raridade === '4-star')) return '4-star';
+            return '3-star';
+        }
+
+        // Função para mostrar resultados na modal
+        function showResults(results, maxRarity) {
+            const resultModal = document.getElementById('result-modal');
+            const modalContent = document.getElementById('modal-content');
+            const continueBtn = document.getElementById('continue-button');
+            const singleResult = document.getElementById('single-result');
+            const multiResults = document.getElementById('multi-results');
+            
+            resultModal.style.display = 'flex';
+            modalContent.style.opacity = 0;
+            modalContent.style.transform = 'scale(0.9)';
+            continueBtn.style.opacity = 0;
+            continueBtn.style.transform = 'translateY(20px)';
+            
+            // Limpar resultados anteriores
+            singleResult.innerHTML = '';
+            multiResults.innerHTML = '';
+            
+            if (results.length === 1) {
+                singleResult.style.display = 'block';
+                multiResults.style.display = 'none';
+                
+                const item = results[0];
+                const borderClass = getRarityBorderClass(item.raridade);
+                const stars = getRarityStars(item.raridade);
+                
+                singleResult.innerHTML = `
+                    <div class="item-result ${borderClass}">
+                        <div class="item-image" style="background-image: url('${item.imagem_url || 'https://via.placeholder.com/100/773333/ffffff?text=?'}')"></div>
+                        <div class="item-info">
+                            <div class="item-name item-rarity-${item.raridade?.charAt(0) || '3'}">${item.nome}</div>
+                            <div class="item-type">${stars}</div>
+                        </div>
+                    </div>
+                `;
+                
+                gsap.to(modalContent, { opacity: 1, scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+                gsap.to('.item-result', { opacity: 1, scale: 1, duration: 0.5, delay: 0.3, ease: 'back.out(2)' });
+                gsap.to(continueBtn, { opacity: 1, y: 0, duration: 0.5, delay: 0.8, ease: 'power2.out' });
+            } else {
+                singleResult.style.display = 'none';
+                multiResults.style.display = 'grid';
+                
+                // Ordenar resultados por raridade (5★ primeiro, depois 4★, depois 3★)
+                results.sort((a, b) => {
+                    if (a.raridade === "5-star") return -1;
+                    if (b.raridade === "5-star") return 1;
+                    if (a.raridade === "4-star") return -1;
+                    if (b.raridade === "4-star") return 1;
+                    return 0;
+                });
+                
+                // Adicionar itens ao DOM
+                results.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    const borderClass = getRarityBorderClass(item.raridade);
+                    const stars = getRarityStars(item.raridade);
+                    
+                    itemElement.className = `multi-item ${borderClass}`;
+                    itemElement.innerHTML = `
+                        <div class="item-image" style="background-image: url('${item.imagem_url || 'https://via.placeholder.com/100/773333/ffffff?text=?'}')"></div>
+                        <div class="item-info">
+                            <div class="item-name item-rarity-${item.raridade?.charAt(0) || '3'}">${item.nome}</div>
+                            <div class="item-type">${stars}</div>
+                        </div>
+                    `;
+                    multiResults.appendChild(itemElement);
+                });
+                
+                gsap.to(modalContent, { opacity: 1, scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+                gsap.to('.multi-item', { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.5, 
+                    stagger: 0.1, 
+                    delay: 0.3, 
+                    ease: 'back.out(1.5)' 
+                });
+                gsap.to(continueBtn, { 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 0.5, 
+                    delay: 0.8 + (results.length * 0.05), 
+                    ease: 'power2.out' 
+                });
+            }
+        }
+
+        function closeResultModal() {
+            const modalContent = document.getElementById('modal-content');
+            const resultModal = document.getElementById('result-modal');
+            const darkOverlay = document.getElementById('dark-overlay');
+            
+            gsap.to(modalContent, {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => {
+                    resultModal.style.display = 'none';
+                    darkOverlay.style.display = 'none';
+                }
+            });
+        }
+
+        // ---------------- INICIALIZAÇÃO ----------------
+        $(document).ready(function() {
+            // Configurar event listeners
+            document.getElementById('wish-1').addEventListener('click', () => doWish(1));
+            document.getElementById('wish-10').addEventListener('click', () => doWish(10));
+            document.querySelector('.close-modal').addEventListener('click', closeResultModal);
+            document.getElementById('continue-button').addEventListener('click', closeResultModal);
+            document.querySelector('.details-button').addEventListener('click', showDetailsModal);
+            document.querySelector('.close-details').addEventListener('click', hideDetailsModal);
+
+            // Configurar alertas
+            $('#alertButton').on('click', hideCustomAlert);
+            $('#alertOverlay').on('click', hideCustomAlert);
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && $('#alertOverlay').hasClass('show')) {
+                    hideCustomAlert();
+                }
+                if (e.key === 'Escape' && document.getElementById('details-modal').style.display === 'flex') {
+                    hideDetailsModal();
+                }
+            });
+
+            // Fechar modais ao clicar fora
+            window.addEventListener('click', (e) => {
+                if (e.target === document.getElementById('result-modal')) {
+                    closeResultModal();
+                }
+                if (e.target === document.getElementById('details-modal')) {
+                    hideDetailsModal();
+                }
+            });
+
+            // Carregar dados
+            loadBannerData();
+        });
+    </script>
+</body>
+</html>

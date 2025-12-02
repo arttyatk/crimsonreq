@@ -247,15 +247,10 @@
                         <option value="inativo">Inativo</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="itens_ids">IDs dos Itens (separados por vírgula)</label>
-                    <input type="text" id="itens_ids" name="itens_ids">
-                </div>
             </div>
         </form>
 
         <div class="action-buttons">
-            <button class="btn btn-danger" id="delete-btn">Excluir Banner</button>
             <button class="btn btn-primary" id="save-btn">Salvar Alterações</button>
         </div>
     </div>
@@ -420,22 +415,6 @@
         updateBanner(bannerId, formData);
     });
 
-    // Evento do botão Excluir
-    document.getElementById('delete-btn').addEventListener('click', () => {
-        if (confirm('Tem certeza que deseja excluir este banner? Esta ação não pode ser desfeita.')) {
-            $.ajax({
-                url: `${API_URL}/${bannerId}`,
-                type: 'DELETE',
-                success: function(response) {
-                    alert(response.message || 'Banner excluído com sucesso!');
-                    window.location.href = 'banns.html';
-                },
-                error: function(xhr) {
-                    alert('Erro ao excluir: ' + xhr.responseText);
-                }
-            });
-        }
-    });
     
     // ------------------------------------
     // 6. INICIALIZAÇÃO

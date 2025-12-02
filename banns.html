@@ -6,8 +6,8 @@
     <title>Gerenciar Banners</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
-        /* (Seu CSS aqui, ele já está perfeito) */
         * {
             margin: 0;
             padding: 0;
@@ -60,7 +60,7 @@
 
         .banner-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             justify-content: center;
         }
@@ -74,7 +74,7 @@
             transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            height: 100%;
         }
 
         .banner-card:hover {
@@ -92,6 +92,8 @@
             color: #773333;
             font-size: 3rem;
             border-bottom: 1px solid #a00000;
+            position: relative;
+            overflow: hidden;
         }
 
         .banner-image {
@@ -104,12 +106,16 @@
             padding: 15px;
             text-align: center;
             width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .banner-info h3 {
             font-size: 1.5em;
             color: #ffcccc;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .banner-info p {
@@ -120,22 +126,30 @@
 
         .banner-actions {
             display: flex;
-            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 8px;
             width: 100%;
-            padding: 0 15px 15px;
+            padding: 10px 0 0;
+            justify-content: center;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 8px;
             font-size: 0.9em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            text-decoration: none; /* Para remover o sublinhado em links */
+            text-decoration: none;
             color: white;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            flex: 1;
+            min-width: 0;
+            text-align: center;
         }
 
         .btn-edit {
@@ -157,7 +171,7 @@
         .btn-delete:hover {
             background: linear-gradient(to bottom, #ef5350, #e53935);
             transform: translateY(-2px);
-            box-shadow: 6px #c62828;
+            box-shadow: 0 6px 0 #c62828;
         }
 
         .btn-back {
@@ -170,6 +184,7 @@
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
+            flex: none;
         }
 
         .btn-back:hover {
@@ -179,15 +194,217 @@
         }
 
         .btn-enter {
-        background: linear-gradient(to bottom, #ff9800, #f57c00);
-        box-shadow: 0 4px 0 #e65100;
-    }
+            background: linear-gradient(to bottom, #ff9800, #f57c00);
+            box-shadow: 0 4px 0 #e65100;
+            flex-basis: 100%;
+        }
 
-    .btn-enter:hover {
-        background: linear-gradient(to bottom, #ffa726, #fb8c00);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 #e65100;
-    }
+        .btn-enter:hover {
+            background: linear-gradient(to bottom, #ffa726, #fb8c00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #e65100;
+        }
+
+        /* Alertas Personalizados */
+        .alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-alert {
+            background: linear-gradient(135deg, #2a0a0a, #4a0a0a);
+            border: 2px solid #a00000;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(200, 0, 0, 0.6);
+            transform: scale(0.8);
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .custom-alert.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .alert-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ff4444;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .alert-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffcccc;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .alert-message {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #ffb3b3;
+            line-height: 1.5;
+        }
+
+        .alert-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .alert-button {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            min-width: 120px;
+        }
+
+        .alert-button-confirm {
+            background: linear-gradient(to bottom, #d10000, #a00000);
+            color: white;
+            box-shadow: 0 4px 0 #600000;
+        }
+
+        .alert-button-confirm:hover {
+            background: linear-gradient(to bottom, #e10000, #b00000);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #700000;
+        }
+
+        .alert-button-cancel {
+            background: linear-gradient(to bottom, #666666, #444444);
+            color: white;
+            box-shadow: 0 4px 0 #222222;
+        }
+
+        .alert-button-cancel:hover {
+            background: linear-gradient(to bottom, #777777, #555555);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #333333;
+        }
+
+        .alert-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0;
+        }
+
+        /* Efeito de brilho pulsante */
+        .alert-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0) 70%);
+            animation: pulse-glow 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        /* Loading durante exclusão */
+        .deleting-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .deleting-spinner {
+            background: linear-gradient(135deg, #2a0a0a, #4a0a0a);
+            border: 2px solid #a00000;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(200, 0, 0, 0.5);
+        }
+
+        .spinner-icon {
+            font-size: 3rem;
+            color: #ff4444;
+            margin-bottom: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner-text {
+            font-size: 1.2rem;
+            color: #ffcccc;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsividade adicional */
+        @media (max-width: 768px) {
+            .manage-container {
+                padding: 20px;
+            }
+            
+            .header {
+                font-size: 2em;
+                margin-top: 50px;
+            }
+            
+            .banner-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-back {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+                width: fit-content;
+            }
+
+            .alert-buttons {
+                flex-direction: column;
+            }
+
+            .alert-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -199,9 +416,184 @@
         <div class="banner-list" id="banner-list">
         </div>
     </div>
-    
+
+    <!-- Alertas Personalizados -->
+    <div class="alert-overlay" id="alertOverlay">
+        <div class="custom-alert" id="customAlert">
+            <div class="alert-glow"></div>
+            <div class="alert-icon" id="alertIcon">⚠️</div>
+            <div class="alert-title" id="alertTitle">Confirmar Exclusão</div>
+            <div class="alert-message" id="alertMessage">Tem certeza que deseja excluir este banner? Esta ação não pode ser desfeita.</div>
+            <div class="alert-buttons">
+                <button class="alert-button alert-button-cancel" id="alertCancel">Cancelar</button>
+                <button class="alert-button alert-button-confirm" id="alertConfirm">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading durante exclusão -->
+    <div class="deleting-overlay" id="deletingOverlay">
+        <div class="deleting-spinner">
+            <div class="spinner-icon">
+                <i class="fa-solid fa-spinner"></i>
+            </div>
+            <div class="spinner-text">Excluindo banner...</div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'http://127.0.0.1:8000/api/banners-boxes';
+        let currentBannerIdToDelete = null;
+
+        // Dados dummy para demonstração
+        const dummyBanners = [
+            { id: 1, nome: "Banner de Promoção", descricao: "Oferta especial de Verão", tipo: "banner", imagem_url: "https://placehold.co/300x180/800000/ffffff?text=Banner+Longo" },
+            { id: 2, nome: "Box da Sorte", descricao: "Gire e ganhe prêmios", tipo: "box", imagem_url: "https://placehold.co/300x180/f57c00/ffffff?text=Box+Roleta" },
+            { id: 3, nome: "Banner Institucional", descricao: "Nossa nova missão", tipo: "banner", imagem_url: "https://placehold.co/300x180/3a2542/ffffff?text=Banner+Novo" },
+            { id: 4, nome: "Box Desconto", descricao: "Ganhe um cupom extra", tipo: "box", imagem_url: null }
+        ];
+
+        // Sistema de Alertas Personalizados
+        function showDeleteConfirmation(bannerId, bannerName) {
+            currentBannerIdToDelete = bannerId;
+            
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            const $icon = $('#alertIcon');
+            const $title = $('#alertTitle');
+            const $message = $('#alertMessage');
+            
+            // Configurar conteúdo do alerta
+            $title.text('Confirmar Exclusão');
+            $message.text(`Tem certeza que deseja excluir o banner "${bannerName}"? Esta ação não pode ser desfeita.`);
+            $icon.html('🗑️');
+            
+            // Mostrar alerta com animação
+            gsap.killTweensOf([$alert[0], $overlay[0]]);
+            
+            gsap.timeline()
+                .set($overlay[0], { display: 'flex' })
+                .set($alert[0], { display: 'block' })
+                .to($overlay[0], { duration: 0.3, opacity: 1, ease: "power2.out" })
+                .to($alert[0], { 
+                    duration: 0.4, 
+                    opacity: 1, 
+                    scale: 1, 
+                    ease: "back.out(1.7)",
+                    onStart: () => {
+                        $overlay.addClass('show');
+                        $alert.addClass('show');
+                    }
+                }, "-=0.2");
+        }
+
+        function hideAlert() {
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            
+            gsap.timeline()
+                .to($alert[0], { duration: 0.3, opacity: 0, scale: 0.8, ease: "power2.in" })
+                .to($overlay[0], { 
+                    duration: 0.3, 
+                    opacity: 0, 
+                    ease: "power2.out",
+                    onComplete: () => {
+                        $overlay.removeClass('show');
+                        $alert.removeClass('show');
+                        $overlay[0].style.display = 'none';
+                        $alert[0].style.display = 'none';
+                        currentBannerIdToDelete = null;
+                    }
+                }, "-=0.2");
+        }
+
+        function showDeletingOverlay() {
+            const $overlay = $('#deletingOverlay');
+            gsap.killTweensOf($overlay[0]);
+            
+            gsap.timeline()
+                .set($overlay[0], { display: 'flex' })
+                .to($overlay[0], { duration: 0.3, opacity: 1, ease: "power2.out" });
+        }
+
+        function hideDeletingOverlay() {
+            const $overlay = $('#deletingOverlay');
+            
+            gsap.to($overlay[0], { 
+                duration: 0.3, 
+                opacity: 0, 
+                ease: "power2.out",
+                onComplete: () => {
+                    $overlay[0].style.display = 'none';
+                }
+            });
+        }
+
+        function showSuccessAlert(message) {
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            const $icon = $('#alertIcon');
+            const $title = $('#alertTitle');
+            const $message = $('#alertMessage');
+            const $buttons = $('.alert-buttons');
+            
+            // Configurar alerta de sucesso
+            $title.text('Sucesso!');
+            $message.text(message);
+            $icon.html('✅');
+            $buttons.html('<button class="alert-button alert-button-confirm" id="alertOk">OK</button>');
+            
+            // Mostrar alerta
+            gsap.killTweensOf([$alert[0], $overlay[0]]);
+            
+            gsap.timeline()
+                .set($overlay[0], { display: 'flex' })
+                .set($alert[0], { display: 'block' })
+                .to($overlay[0], { duration: 0.3, opacity: 1, ease: "power2.out" })
+                .to($alert[0], { 
+                    duration: 0.4, 
+                    opacity: 1, 
+                    scale: 1, 
+                    ease: "back.out(1.7)",
+                    onStart: () => {
+                        $overlay.addClass('show');
+                        $alert.addClass('show');
+                    }
+                }, "-=0.2");
+        }
+
+        function showErrorAlert(message) {
+            const $alert = $('#customAlert');
+            const $overlay = $('#alertOverlay');
+            const $icon = $('#alertIcon');
+            const $title = $('#alertTitle');
+            const $message = $('#alertMessage');
+            const $buttons = $('.alert-buttons');
+            
+            // Configurar alerta de erro
+            $title.text('Erro!');
+            $message.text(message);
+            $icon.html('❌');
+            $buttons.html('<button class="alert-button alert-button-confirm" id="alertOk">OK</button>');
+            
+            // Mostrar alerta
+            gsap.killTweensOf([$alert[0], $overlay[0]]);
+            
+            gsap.timeline()
+                .set($overlay[0], { display: 'flex' })
+                .set($alert[0], { display: 'block' })
+                .to($overlay[0], { duration: 0.3, opacity: 1, ease: "power2.out" })
+                .to($alert[0], { 
+                    duration: 0.4, 
+                    opacity: 1, 
+                    scale: 1, 
+                    ease: "back.out(1.7)",
+                    onStart: () => {
+                        $overlay.addClass('show');
+                        $alert.addClass('show');
+                    }
+                }, "-=0.2");
+        }
 
         // Função para renderizar os banners
         function renderBanners(banners) {
@@ -218,22 +610,34 @@
                     imageContent = `<i class="fa-solid fa-image"></i>`;
                 }
                 
+                const linkTarget = banner.tipo === 'box' ? 'roleta.html' : 'persobanner.html';
+
                 const card = `
                     <div class="banner-card">
                         <div class="banner-image-container">
                             ${imageContent}
                         </div>
                         <div class="banner-info">
-                            <h3>${banner.nome}</h3>
-                            <p>${banner.descricao || 'Sem descrição'}</p>
-                        </div>
-                        <div class="banner-actions">
-                            <button class="btn btn-edit" onclick="editBanner(${banner.id})">
-                                <i class="fa-solid fa-pen-to-square"></i> Editar
-                            </button>
-                            <button class="btn btn-delete" onclick="deleteBanner(${banner.id})">
-                                <i class="fa-solid fa-trash-can"></i> Excluir
-                            </button>
+                            <div>
+                                <h3>${banner.nome}</h3>
+                                <p>Tipo: <span style="font-weight: bold; color: ${banner.tipo === 'banner' ? '#4caf50' : '#ff9800'};">${banner.tipo.toUpperCase()}</span></p>
+                                <p>${banner.descricao || 'Sem descrição'}</p>
+                            </div>
+                            <div class="banner-actions">
+                                <button class="btn btn-edit" onclick="editBanner(${banner.id})">
+                                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteBanner(${banner.id}, '${banner.nome.replace(/'/g, "\\'")}')">
+                                    <i class="fa-solid fa-trash-can"></i> Excluir
+                                </button>
+                                <button class="btn btn-enter" 
+                                    data-id="${banner.id}" 
+                                    data-type="${banner.tipo}" 
+                                    data-target-page="${linkTarget}"
+                                    onclick="enterBanner(this)">
+                                    <i class="fa-solid fa-play"></i> Entrar no Banner
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -241,6 +645,7 @@
             });
         }
         
+        // Função para buscar banners
         function fetchBanners() {
             $.ajax({
                 url: API_URL,
@@ -249,80 +654,119 @@
                     renderBanners(response);
                 },
                 error: function(xhr) {
-                    alert('Erro ao carregar os banners: ' + xhr.responseText);
+                    console.log('Erro ao carregar os banners, usando dados dummy:', xhr.responseText);
+                    renderBanners(dummyBanners);
                 }
             });
         }
 
-        function deleteBanner(id) {
-            if (confirm('Tem certeza que deseja excluir este banner?')) {
-                $.ajax({
-                    url: `${API_URL}/${id}`,
-                    type: 'DELETE',
-                    success: function(response) {
-                        alert(response.message);
+        // Função para excluir banner
+        function deleteBanner(id, name) {
+            showDeleteConfirmation(id, name);
+        }
+
+        // Função para confirmar exclusão
+        function confirmDelete() {
+            if (!currentBannerIdToDelete) return;
+            
+            const bannerId = currentBannerIdToDelete;
+            hideAlert();
+            showDeletingOverlay();
+            
+            // Fazer requisição DELETE para a API
+            $.ajax({
+                url: `${API_URL}/${bannerId}`,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Se estiver usando Laravel
+                    'Authorization': 'Bearer ' + getCookie('token') // Se estiver usando autenticação
+                },
+                success: function(response) {
+                    hideDeletingOverlay();
+                    showSuccessAlert('Banner excluído com sucesso!');
+                    // Recarregar a lista de banners
+                    setTimeout(() => {
                         fetchBanners();
-                    },
-                    error: function(xhr) {
-                        alert('Erro ao excluir: ' + xhr.responseText);
-                    }
-                });
-            }
+                    }, 1500);
+                },
+                error: function(xhr) {
+                    hideDeletingOverlay();
+                    const errorMsg = xhr.responseJSON?.message || 'Erro ao excluir o banner';
+                    showErrorAlert(errorMsg);
+                    console.error('Erro ao excluir banner:', xhr.responseText);
+                }
+            });
         }
         
+        // Função auxiliar para obter cookies
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        
+        // Função para editar
         function editBanner(id) {
             window.location.href = `gbann.html?id=${id}`;
         }
+
+        // Função para entrar no banner
+        function enterBanner(buttonElement) {
+            const bannerId = $(buttonElement).data('id');
+            const type = $(buttonElement).data('type'); 
+            
+            console.log(`Tentativa de entrada no Banner ID: ${bannerId}, Tipo: ${type}`);
+
+            if (type === 'banner') {
+                window.location.href = `persobanner.html?bannerId=${bannerId}`;
+            } else if (type === 'box') {
+                window.location.href = `roleta.html?bannerId=${bannerId}`;
+            } else {
+                showErrorAlert(`Tipo de banner desconhecido (${type}) para o ID ${bannerId}.`);
+            }
+        }
         
+        // Event Listeners
         $(document).ready(function() {
             fetchBanners();
-        });
-
-        function renderBanners(banners) {
-        const bannerList = $('#banner-list');
-        bannerList.empty();
-
-        banners.forEach(banner => {
-            const imageUrl = banner.imagem_url;
-            let imageContent;
-
-            if (imageUrl) {
-                imageContent = `<img src="${imageUrl}" alt="${banner.nome}" class="banner-image">`;
-            } else {
-                imageContent = `<i class="fa-solid fa-image"></i>`;
-            }
             
-            const card = `
-                <div class="banner-card">
-                    <div class="banner-image-container">
-                        ${imageContent}
-                    </div>
-                    <div class="banner-info">
-                        <h3>${banner.nome}</h3>
-                        <p>${banner.descricao || 'Sem descrição'}</p>
-                    </div>
-                    <div class="banner-actions">
-                        <button class="btn btn-edit" onclick="editBanner(${banner.id})">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar
-                        </button>
-                        <button class="btn btn-delete" onclick="deleteBanner(${banner.id})">
-                            <i class="fa-solid fa-trash-can"></i> Excluir
-                        </button>
-                        <button class="btn btn-enter" onclick="enterBanner(${banner.id})">
-                            <i class="fa-solid fa-play"></i> Entrar no Banner
-                        </button>
-                    </div>
-                </div>
-            `;
-            bannerList.append(card);
-        });
-    }
+            // Configurar eventos dos botões do alerta
+            $('#alertConfirm').on('click', confirmDelete);
+            $('#alertCancel').on('click', hideAlert);
+            
+            // Evento delegado para o botão OK (usado em alertas de sucesso/erro)
+            $(document).on('click', '#alertOk', function() {
+                hideAlert();
+            });
+            
+            // Fechar alerta ao clicar fora
+            $('#alertOverlay').on('click', function(e) {
+                if (e.target === this) {
+                    hideAlert();
+                }
+            });
+            
+            // Fechar com ESC
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && $('#alertOverlay').is(':visible')) {
+                    hideAlert();
+                }
+            });
 
-    // Nova função para entrar no banner
-    function enterBanner(bannerId) {
-        // Redireciona para a roleta.html passando o id do banner via query string
-        window.location.href = `roleta.html?bannerId=${bannerId}`;
-    }
+            function deslogarUsuario() {
+                showAlert('warning', 'ATENÇÃO', 'Sessão finalizada com sucesso.');
+                setTimeout(() => {
+                    removerTodosCookies();
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+
+            $('#logoutBtn').on('click', function(e) {
+                    e.preventDefault();
+                    deslogarUsuario();
+                });
+            });
     </script>
 </body>
 </html>

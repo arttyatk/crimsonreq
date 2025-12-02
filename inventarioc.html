@@ -13,7 +13,7 @@
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%; overflow-x: hidden;} /* ← IMPEDE ROLAGEM HORIZONTAL */
+  html,body{height:100%; overflow-x: hidden;}
   body{
     background: radial-gradient(circle at 10% 10%, var(--bg1), var(--bg2));
     font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
@@ -28,13 +28,17 @@
     width:100%;
     max-width:1200px;
     text-align:center;
-    overflow: hidden; /* ← CONTAINER NÃO CRESCE */
+    overflow: hidden;
     padding-top: 90px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .info {
     margin-bottom: 18px;
-    min-height: 80px; /* Garante altura mínima */
+    min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -42,10 +46,10 @@
   .info h2 {
       font-size: 1.9rem; 
       letter-spacing: .4px;
-      line-height: 1.3; /* Melhora o espaçamento entre linhas */
-      word-wrap: break-word; /* Quebra palavras longas */
+      line-height: 1.3;
+      word-wrap: break-word;
       overflow-wrap: break-word;
-      max-height: 60px; /* Altura máxima */
+      max-height: 60px;
       overflow: hidden;
   }
   .info p {
@@ -54,13 +58,14 @@
       line-height: 1.4;
   }
 
-  /* wrapper com perspectiva - AGORA COM OVERFLOW HIDDEN */
+  /* wrapper com perspectiva */
   .coverflow-wrapper{
     position:relative;
     width:100%;
     height:580px;
+    min-height: 580px;
     perspective:1400px;
-    overflow: hidden; /* ← IMPEDE QUE CARDS SAIAM DA ÁREA VISÍVEL */
+    overflow: hidden;
     touch-action: pan-y;
     outline: none;
     margin: 0 auto;
@@ -91,6 +96,8 @@
     transition: transform 650ms cubic-bezier(.22,1,.36,1), opacity 400ms ease;
     box-shadow: 0 18px 40px rgba(0,0,0,.6);
     -webkit-tap-highlight-color: transparent;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .card{
@@ -100,6 +107,8 @@
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.12));
     border: 1px solid rgba(255,255,255,0.06);
     backdrop-filter: blur(6px);
+    overflow: hidden !important;
+    min-height: 520px;
   }
 
   .card-figure{
@@ -125,6 +134,8 @@
     display:flex;
     flex-direction:column;
     gap:6px;
+    overflow: hidden !important;
+    background: transparent !important;
   }
   .card-details h3{font-size:1.05rem; margin-bottom:2px}
   .card-details p{font-size:.88rem; opacity:.8}
@@ -171,17 +182,63 @@
     font-size: 0.9rem;
   }
 
+  /* Estado vazio */
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.7);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+  }
+
+  /* Scrollbar personalizada */
+  .scrollable-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(192, 192, 192, 0.5) transparent;
+    padding-right: 10px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb {
+    background: rgba(192, 192, 192, 0.5);
+    border-radius: 4px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(160, 160, 160, 0.7);
+  }
+
+  .scrollable-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Melhorias no design das habilidades e passivas */
+  .skills-section, .passives-section {
+    margin-bottom: 15px;
+  }
+
   /* responsividade */
   @media (max-width:900px){
     :root{ --card-w:220px; --card-h:300px }
     .coverflow-wrapper{ height:420px }
-    /* REDUZ O ESPAÇAMENTO ENTRE CARDS EM TELAS MENORES */
   }
   @media (max-width:520px){
     :root{ --card-w:180px; --card-h:260px }
     .coverflow-wrapper{ height:360px }
     .keyboard-hint{ display: none }
-    /* REDUZ AINDA MAIS O ESPAÇAMENTO EM MOBILE */
   }
 </style>
 </head>

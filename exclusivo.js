@@ -21,6 +21,19 @@ $(document).ready(function() {
         }
     }
 
+    function deslogarUsuario() {
+        showAlert('warning', 'ATENÇÃO', 'Sessão finalizada com sucesso.');
+        setTimeout(() => {
+            removerTodosCookies();
+            window.location.href = 'login.html';
+        }, 2000);
+    }
+
+    $('#logoutBtn').on('click', function(e) {
+        e.preventDefault();
+        deslogarUsuario();
+    });
+
     // ================= SISTEMA DE ALERTAS ÉPICOS =================
     function createEpicParticles(container, count = 20) {
         container.innerHTML = '';

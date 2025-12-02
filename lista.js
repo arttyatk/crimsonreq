@@ -20,6 +20,19 @@ function removerTodosCookies() {
     }
 }
 
+function deslogarUsuario() {
+    showAlert('warning', 'ATENÇÃO', 'Sessão finalizada com sucesso.');
+    setTimeout(() => {
+        removerTodosCookies();
+        window.location.href = 'login.html';
+    }, 2000);
+}
+
+$('#logoutBtn').on('click', function(e) {
+        e.preventDefault();
+        deslogarUsuario();
+    });
+
 // ================= SISTEMA DE ALERTAS =================
 function createParticles(container, count = 12) {
     container.innerHTML = '';
